@@ -16,7 +16,7 @@ JSON requests and responses. Errors: `{"error":"code","message":"description"}`.
 - POST `/api/admin/reset-password` `{id}`: `{temporary_password}`. Revokes sessions; requires password change.
 - POST `/api/admin/closures` `{date,period,location,reason}`: `{ok:true}`. location all|home|center. Close whole day using full/all. Existing bookings stay stored but are marked blocked and displayed as cancelled while closure applies. Reopening restores them.
 - DELETE `/api/admin/closures?id=N`: `{ok:true}`. Closure rows `{id,date,period,location,reason}`.
-- POST `/api/admin/announcements` `{date,end_date,title,body}`: `{ok:true}`. All dates inclusive, title <=120 chars, body <=1000 chars; UI may use one day for both dates.
+- POST `/api/admin/announcements` `{date,end_date,title,body}`: `{ok:true}`. All dates inclusive, title <=120 Unicode code points / 480 UTF-8 bytes, body <=1000 code points / 4000 bytes; UI may use one day for both dates.
 - DELETE `/api/admin/announcements?id=N`: `{ok:true}`. Announcement rows `{id,date,end_date,title,body}`.
 - POST `/api/admin/resources` `{name,room,kind}`: `{ok:true}`. kind desk|room. A room resource conflicts with every desk in the identical room string; different desks can coexist. Resource rows `{id,name,room,kind,active}`.
 - PATCH `/api/admin/resources` `{id,active:boolean}`: `{ok:true}`. Disable forbidden if future bookings exist.

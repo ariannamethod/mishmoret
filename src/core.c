@@ -88,6 +88,16 @@ static int textvalid(const char *s, int nonempty) {
             return 0;
     return 1;
 }
+static int textwithin(const char *s, size_t max) {
+    if (!s)
+        return 0;
+    size_t count = 0;
+    /* The HTTP JSON parser validates UTF-8; count each code point's first byte. */
+    for (const unsigned char *p = (const unsigned char *)s; *p; p++)
+        if ((*p & 0xc0) != 0x80 && ++count > max)
+            return 0;
+    return 1;
+}
 static int loginvalid(const char *s) {
     if (!s || !*s)
         return 0;
@@ -951,7 +961,8 @@ static Result announcement(App *a, const Identity *u, json_object *j) {
     const char *date = str(j, "date", 10), *end = str(j, "end_date", 10),
                *title = str(j, "title", 480), *body = str(j, "body", 4000);
     if (!datevalid(date, NULL) || !datevalid(end, NULL) || strcmp(end, date) < 0 ||
-        !textvalid(title, 1) || !textvalid(body, 0))
+        !textvalid(title, 1) || !textvalid(body, 0) || !textwithin(title, 120) ||
+        !textwithin(body, 1000))
         return fail(400, "invalid_announcement", "Invalid dates, title or text");
     sqlite3_stmt *s =
         stmt(a, "INSERT INTO announcements(date,end_date,title,body) VALUES(?,?,?,?)");
