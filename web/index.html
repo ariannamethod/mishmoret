@@ -4,22 +4,46 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#143b3b">
-  <title>משמרת · באר שבע</title>
+  <title>משמרת · אנטר, באר שבע</title>
+  <link rel="icon" type="image/svg+xml" href="/itzik.svg">
   <link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
+  <!-- Animated chat portrait; the static project logo lives in itzik.svg. -->
+  <template id="itzik-face-template">
+    <svg class="itzik-face" viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+      <circle cx="40" cy="40" r="38" fill="#efe5c9"/>
+      <path d="M14 76Q16 58 40 59Q64 58 66 76" fill="#397866"/>
+      <path d="m29 61 11 11 11-11" fill="#fffaf0"/>
+      <path d="M32 56v8q8 8 16 0v-8" fill="#dba47a"/>
+      <ellipse cx="18" cy="39" rx="6" ry="9" fill="#e9b98d"/>
+      <ellipse cx="62" cy="39" rx="6" ry="9" fill="#e9b98d"/>
+      <path d="M19 28Q18 9 40 10Q63 9 61 32v13q-1 19-21 20Q20 63 19 45Z" fill="#edc39b" stroke="#143b3b" stroke-width="2"/>
+      <path d="M19 34Q10 12 31 12Q32 4 43 11Q64 4 63 29l-8-9-8 3-9-6-12 9-4 10" fill="#143b3b"/>
+      <path class="itzik-brow" d="m24 29 10-3m13 1 10 3" fill="none" stroke="#143b3b" stroke-width="3.5" stroke-linecap="round"/>
+      <g fill="#fffaf0" stroke="#143b3b" stroke-width="2.5">
+        <rect x="21" y="33" width="16" height="13" rx="5"/>
+        <rect x="44" y="33" width="16" height="13" rx="5"/>
+        <path d="M37 37h7m-26-2 3 2m39 0 3-2" fill="none"/>
+      </g>
+      <g class="itzik-pupils" fill="#143b3b"><circle cx="31" cy="39" r="2.5"/><circle cx="51" cy="39" r="2.5"/></g>
+      <path d="m40 39-2 10h5" fill="none" stroke="#bf865e" stroke-width="2" stroke-linecap="round"/>
+      <path d="M29 53q6-9 11-3 5-6 12 2-9 5-12 0-4 5-11 1" fill="#143b3b"/>
+      <path class="itzik-mouth" d="M35 58q7 3 13-2" fill="none" stroke="#143b3b" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </template>
   <a class="skip-link" href="#main-content">מעבר לתוכן</a>
   <div id="status" class="toast" role="status" aria-live="polite" hidden></div>
   <div id="initial-loading" class="loading-page" role="status">טוענים את משמרת…</div>
 
   <main id="auth-screen" class="auth-layout" hidden>
     <section class="auth-intro">
-      <span class="brand-mark" aria-hidden="true">מ</span>
-      <p class="eyebrow">באר שבע · לומדים יחד</p>
+      <img class="brand-mark brand-avatar" src="/itzik.svg" alt="" width="80" height="80">
+      <p class="eyebrow">אנטר, באר שבע · לומדים יחד</p>
       <h1>משמרת.</h1>
       <p class="auth-description">השבוע שלך,<br>במקום אחד.</p>
-      <p class="muted">במרכז או מהבית — נפגשים בלמידה.</p>
+      <p class="muted">בחממה או מהבית — נפגשים בלמידה.</p>
     </section>
     <section class="auth-card" aria-labelledby="auth-title">
       <p class="eyebrow">טוב לראות אותך</p>
@@ -32,13 +56,13 @@
         <p id="login-error" class="form-error" role="alert" hidden></p>
         <button class="button primary wide" type="submit">כניסה <span aria-hidden="true">←</span></button>
       </form>
-      <p class="small muted auth-note">אין לך חשבון? אפשר לפנות לצוות המרכז.</p>
+      <p class="small muted auth-note">אין לך חשבון? אפשר לפנות לצוות החממה.</p>
     </section>
   </main>
 
   <main id="first-password-screen" class="compact-page" hidden>
     <section class="auth-card" aria-labelledby="first-password-title">
-      <span class="brand-mark small-mark" aria-hidden="true">מ</span>
+      <img class="brand-mark brand-avatar small-mark" src="/itzik.svg" alt="" width="80" height="80">
       <p class="eyebrow">כניסה ראשונה</p>
       <h1 id="first-password-title">בוחרים סיסמה אישית</h1>
       <p class="muted">מחליפים את הסיסמה הזמנית שקיבלת לפני שממשיכים.</p>
@@ -60,10 +84,10 @@
   <div id="app-screen" hidden>
     <header class="app-header">
       <div class="header-inner">
-        <a class="brand" href="/" aria-label="משמרת — דף הבית"><span class="brand-mark" aria-hidden="true">מ</span><span>משמרת<span class="brand-subtitle">באר שבע</span></span></a>
+        <a class="brand" href="/" aria-label="משמרת — דף הבית"><img class="brand-mark brand-avatar" src="/itzik.svg" alt="" width="80" height="80"><span>משמרת<span class="brand-subtitle">אנטר, באר שבע</span></span></a>
         <nav class="main-nav" aria-label="ניווט ראשי">
           <button id="nav-week" class="nav-button active" type="button" aria-current="page">השבוע שלנו</button>
-          <button id="nav-admin" class="nav-button" type="button" hidden>דיקטטור</button>
+          <button id="nav-admin" class="nav-button" type="button" hidden>דיקטטרורית</button>
         </nav>
         <div class="account-menu"><span id="account-name" class="account-name"></span><button class="button text-button" id="open-password" type="button">סיסמה</button><button class="button text-button" id="logout" type="button">יציאה</button></div>
       </div>
@@ -75,7 +99,7 @@
           <div><p class="eyebrow">מרחב ללמידה, בקצב שלך</p><h1 id="week-title">השבוע שלנו</h1><p class="muted">בוחרים מתי מגיעים, ורואים את מי פוגשים.</p></div>
           <button id="new-booking" class="button primary" type="button"><span aria-hidden="true">＋</span> הרשמה למשמרת</button>
         </div>
-        <div id="announcement-list" class="announcements" aria-label="עדכונים מהמרכז"></div>
+        <div id="announcement-list" class="announcements" aria-label="עדכונים מהחממה"></div>
         <section class="calendar-panel" aria-label="לוח משמרות שבועי">
           <div class="calendar-toolbar">
             <div class="week-navigation"><button id="previous-week" class="icon-button" type="button" aria-label="שבוע קודם">→</button><h2 id="week-range" aria-live="polite"></h2><button id="next-week" class="icon-button" type="button" aria-label="שבוע הבא">←</button><button id="current-week" class="button subtle small-button" type="button">השבוע</button></div>
@@ -83,13 +107,13 @@
           </div>
           <p id="week-loading" class="calendar-loading" role="status" hidden>טוענים את השבוע…</p>
           <div id="calendar" class="calendar-grid"></div>
-          <div class="calendar-footer"><span><i class="legend-dot center-dot" aria-hidden="true"></i> במרכז</span><span><i class="legend-dot home-dot" aria-hidden="true"></i> מהבית</span><span><i class="legend-dot closed-dot" aria-hidden="true"></i> סגור</span><span id="week-summary" class="week-summary"></span></div>
+          <div class="calendar-footer"><span><i class="legend-dot center-dot" aria-hidden="true"></i> בחממה</span><span><i class="legend-dot home-dot" aria-hidden="true"></i> מהבית</span><span><i class="legend-dot closed-dot" aria-hidden="true"></i> סגור</span><span id="week-summary" class="week-summary"></span></div>
         </section>
         <p class="page-footnote">אפשר לעדכן את הבחירה שלך בכל עת. סגירת משמרת מופיעה בלוח לצד ההרשמה.</p>
       </section>
 
       <section id="admin-view" aria-labelledby="admin-title" hidden>
-        <div class="page-heading"><div><p class="eyebrow">ניהול המרכז</p><h1 id="admin-title">דיקטטור</h1><p class="muted">אנשים, מקומות וכל מה שצריך בשביל שבוע טוב.</p></div><span class="role-pill">ניהול</span></div>
+        <div class="page-heading"><div><p class="eyebrow">ניהול החממה</p><h1 id="admin-title">דיקטטרורית</h1><p class="muted">אנשים, מקומות וכל מה שצריך בשביל שבוע טוב.</p></div><span class="role-pill">ניהול</span></div>
         <div class="admin-tabs" role="group" aria-label="תחומי ניהול"><button class="active" data-admin-tab="people" type="button" aria-pressed="true">משתמשים</button><button data-admin-tab="places" type="button" aria-pressed="false">חדרים ושולחנות</button><button data-admin-tab="schedule" type="button" aria-pressed="false">סגירת משמרות</button><button data-admin-tab="notices" type="button" aria-pressed="false">הודעות</button></div>
         <section id="admin-people" class="admin-panel" aria-labelledby="people-title">
           <div class="section-heading"><div><h2 id="people-title">האנשים שלנו</h2><p class="muted small">חשבונות אישיים והרשאות גישה.</p></div><button id="new-user" class="button primary" type="button">＋ משתמש חדש</button></div>
@@ -104,20 +128,20 @@
           <p id="closures-range" class="list-caption"></p><div id="closures-list" class="admin-list"></div>
         </section>
         <section id="admin-notices" class="admin-panel" aria-labelledby="notices-title" hidden>
-          <div class="section-heading"><div><h2 id="notices-title">עדכונים מהמרכז</h2><p class="muted small">הודעות מופיעות בשבועות הרלוונטיים.</p></div><button id="new-announcement" class="button primary" type="button">＋ הודעה חדשה</button></div>
+          <div class="section-heading"><div><h2 id="notices-title">עדכונים מהחממה</h2><p class="muted small">הודעות מופיעות בשבועות הרלוונטיים.</p></div><button id="new-announcement" class="button primary" type="button">＋ הודעה חדשה</button></div>
           <p id="notices-range" class="list-caption"></p><div id="notices-list" class="admin-list"></div>
         </section>
       </section>
     </main>
-    <footer class="site-footer"><span>משמרת · באר שבע</span><span>לומדים יחד, במרכז ומהבית.</span></footer>
-    <button id="wolfe-toggle" class="wolfe-launcher" type="button" aria-expanded="false" aria-controls="wolfe-chat"><span aria-hidden="true">💬</span> דברו עם איציק</button>
+    <footer class="site-footer"><span>משמרת · אנטר, באר שבע</span><span>לומדים יחד, בחממה ומהבית.</span></footer>
+    <button id="wolfe-toggle" class="wolfe-launcher" type="button" aria-expanded="false" aria-controls="wolfe-chat"><span data-itzik-avatar></span> דברו עם איציק</button>
     <section id="wolfe-chat" class="wolfe-chat" role="dialog" aria-modal="false" aria-labelledby="wolfe-title" hidden>
-      <div class="wolfe-chat-heading"><div><h2 id="wolfe-title">איציק</h2><p>מתכננים את השבוע יחד</p></div><button id="wolfe-close" class="icon-button" type="button" aria-label="סגירת השיחה עם איציק">×</button></div>
+      <div class="wolfe-chat-heading"><div class="itzik-identity"><span data-itzik-avatar></span><div><h2 id="wolfe-title">איציק</h2><p>אחראי משמרות מטעם עצמו</p></div></div><button id="wolfe-close" class="icon-button" type="button" aria-label="סגירת השיחה עם איציק">×</button></div>
       <div id="wolfe-history" class="wolfe-history" role="log" aria-live="polite" aria-relevant="additions text" tabindex="0" aria-label="השיחה עם איציק"></div>
       <form id="wolfe-form" class="wolfe-composer">
         <label for="wolfe-text">מה התוכנית שלך?</label>
-        <div class="wolfe-controls"><input id="wolfe-text" name="text" type="text" dir="auto" required maxlength="512" autocomplete="off" aria-describedby="wolfe-help" placeholder="תרשמי אותי ליום שלישי בבוקר מהבית"><button id="wolfe-submit" class="button primary" type="submit" aria-label="שליחת הודעה ל-איציק">שליחה</button></div>
-        <p id="wolfe-help" class="field-help">להרשמה, כותבים בכל בקשה יום, זמן ומקום. ההצעה תיפתח לאישור שלך.</p>
+        <div class="wolfe-controls"><input id="wolfe-text" name="text" type="text" dir="auto" required maxlength="512" autocomplete="off" aria-describedby="wolfe-help" placeholder="תקבע לי ליום שלישי בבוקר מהבית"><button id="wolfe-submit" class="button primary" type="submit" aria-label="שליחת הודעה ל-איציק">שליחה</button></div>
+        <p id="wolfe-help" class="field-help">כותבים יום, זמן ומקום. אם חסר פרט, אפשר להשלים בהודעה הבאה. ההצעה תיפתח לאישור שלך.</p>
         <p id="wolfe-result" class="wolfe-result" role="status" aria-live="polite" hidden></p>
         <p id="wolfe-error" class="form-error" role="alert" hidden></p>
       </form>
@@ -129,7 +153,7 @@
     <form id="booking-form">
       <p id="wolfe-booking-summary" class="info-note" aria-live="polite" hidden></p>
       <label for="booking-date">באיזה יום?</label><input id="booking-date" name="date" type="date" required>
-      <div class="form-columns"><div><label for="booking-period">מתי?</label><select id="booking-period" name="period"><option value="morning">בוקר</option><option value="afternoon">אחר הצהריים</option><option value="full">יום מלא</option></select></div><div><label for="booking-location">מאיפה?</label><select id="booking-location" name="location"><option value="center">מהמרכז</option><option value="home">מהבית</option></select></div></div>
+      <div class="form-columns"><div><label for="booking-period">מתי?</label><select id="booking-period" name="period"><option value="morning">בוקר</option><option value="afternoon">אחר הצהריים</option><option value="full">יום מלא</option></select></div><div><label for="booking-location">מאיפה?</label><select id="booking-location" name="location"><option value="center">בחממה</option><option value="home">מהבית</option></select></div></div>
       <div id="booking-resource-field"><label for="booking-resource">חדר או שולחן <span class="muted">· לבחירתך</span></label><select id="booking-resource" name="resource_id"><option value="">ללא מקום קבוע</option></select><p class="field-help">הזמינות נבדקת בעת השמירה.</p></div>
       <p id="booking-existing" class="info-note" hidden>שמירה תעדכן את ההרשמה הקיימת שלך ביום הזה.</p>
       <p id="booking-error" class="form-error" role="alert" hidden></p>
@@ -144,7 +168,7 @@
 
   <dialog id="user-dialog" aria-labelledby="user-title">
     <div class="dialog-heading"><h2 id="user-title">משתמש חדש</h2><button class="icon-button" type="button" data-close="user-dialog" aria-label="סגירה">×</button></div>
-    <form id="user-form"><label for="user-login">שם משתמש לכניסה</label><input id="user-login" name="login" dir="ltr" required maxlength="64" pattern="[a-z0-9_.\-]+" title="אותיות אנגליות קטנות, ספרות, נקודה, מקף או קו תחתון" autocomplete="off" spellcheck="false" autocapitalize="none"><label for="user-name">שם לתצוגה</label><input id="user-name" name="name" dir="auto" required maxlength="100"><label for="user-role">הרשאה</label><select id="user-role" name="role"><option value="member">משתתף / משתתפת</option><option value="admin">ניהול · דיקטטור</option></select><label id="user-active-label" class="checkbox-label" hidden><input id="user-active" name="active" type="checkbox">חשבון פעיל</label><p id="user-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">שמירה</button><button class="button subtle" type="button" data-close="user-dialog">חזרה</button><button id="reset-user-password" class="button danger-text" type="button" hidden>איפוס סיסמה</button></div></form>
+    <form id="user-form"><label for="user-login">שם משתמש לכניסה</label><input id="user-login" name="login" dir="ltr" required maxlength="64" pattern="[a-z0-9_.\-]+" title="אותיות אנגליות קטנות, ספרות, נקודה, מקף או קו תחתון" autocomplete="off" spellcheck="false" autocapitalize="none"><label for="user-name">שם לתצוגה</label><input id="user-name" name="name" dir="auto" required maxlength="100"><label for="user-role">הרשאה</label><select id="user-role" name="role"><option value="member">משתתף / משתתפת</option><option value="admin">ניהול · דיקטטרורית</option></select><label id="user-active-label" class="checkbox-label" hidden><input id="user-active" name="active" type="checkbox">חשבון פעיל</label><p id="user-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">שמירה</button><button class="button subtle" type="button" data-close="user-dialog">חזרה</button><button id="reset-user-password" class="button danger-text" type="button" hidden>איפוס סיסמה</button></div></form>
   </dialog>
 
   <dialog id="credential-dialog" aria-labelledby="credential-title">
@@ -159,7 +183,7 @@
 
   <dialog id="closure-dialog" aria-labelledby="closure-title">
     <div class="dialog-heading"><h2 id="closure-title">סגירת משמרת</h2><button class="icon-button" type="button" data-close="closure-dialog" aria-label="סגירה">×</button></div>
-    <form id="closure-form"><label for="closure-date">תאריך</label><input id="closure-date" name="date" type="date" required><div class="form-columns"><div><label for="closure-period">זמן</label><select id="closure-period" name="period"><option value="full">כל היום</option><option value="morning">בוקר</option><option value="afternoon">אחר הצהריים</option></select></div><div><label for="closure-location">מקום השתתפות</label><select id="closure-location" name="location"><option value="all">הכול</option><option value="center">במרכז</option><option value="home">מהבית</option></select></div></div><label for="closure-reason">סיבה / הודעה למשתתפים</label><input id="closure-reason" name="reason" required maxlength="300" dir="auto" placeholder="למשל, המרכז סגור היום"><p class="info-note">הרשמות קיימות יוצגו כמבוטלות כל עוד הסגירה בתוקף.</p><p id="closure-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">סגירת המשמרת</button><button class="button subtle" type="button" data-close="closure-dialog">חזרה</button></div></form>
+    <form id="closure-form"><label for="closure-date">תאריך</label><input id="closure-date" name="date" type="date" required><div class="form-columns"><div><label for="closure-period">זמן</label><select id="closure-period" name="period"><option value="full">כל היום</option><option value="morning">בוקר</option><option value="afternoon">אחר הצהריים</option></select></div><div><label for="closure-location">מקום השתתפות</label><select id="closure-location" name="location"><option value="all">הכול</option><option value="center">בחממה</option><option value="home">מהבית</option></select></div></div><label for="closure-reason">סיבה / הודעה למשתתפים</label><input id="closure-reason" name="reason" required maxlength="300" dir="auto" placeholder="למשל, החממה סגורה היום"><p class="info-note">הרשמות קיימות יוצגו כמבוטלות כל עוד הסגירה בתוקף.</p><p id="closure-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">סגירת המשמרת</button><button class="button subtle" type="button" data-close="closure-dialog">חזרה</button></div></form>
   </dialog>
 
   <dialog id="announcement-dialog" aria-labelledby="announcement-title">

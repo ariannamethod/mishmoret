@@ -134,6 +134,73 @@ async function main() {
   // A Hebrew request must open a proposal without storing a booking.
   await page.locator('#wolfe-toggle').click();
   await page.locator('#wolfe-chat').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#wolfe-text').getAttribute('placeholder'),
+    'תקבע לי ליום שלישי בבוקר מהבית');
+  // Reproduce the real conversation: ask only for the missing location, then
+  // interpret the next message as its clarification without saving anything.
+  async function askItzik(text) {
+    await page.locator('#wolfe-text').fill(text);
+    await page.locator('#wolfe-submit').click();
+    await page.waitForFunction(() => document.querySelector('#wolfe-form').getAttribute('aria-busy') === 'false');
+  }
+  const incomplete = 'היי איציק אני רוצה משמרת ביום שלישי בבוקר';
+  await askItzik(incomplete);
+  assert((await page.locator('#wolfe-history .assistant').last().textContent()).includes('איפה לומדים — מהבית או בחממה?'));
+  assert(await page.locator('#booking-dialog').isHidden());
+  await askItzik('בחממה');
+  await page.locator('#booking-dialog').waitFor({ state: 'visible' });
+  const clarifiedDate = await page.locator('#booking-date').inputValue();
+  assert.equal(new Date(`${clarifiedDate}T12:00:00Z`).getUTCDay(), 2);
+  assert.equal(await page.locator('#booking-location').inputValue(), 'center');
+  assert.equal(await page.locator('#booking-period').inputValue(), 'morning');
+  assert((await page.locator('#wolfe-booking-summary').textContent()).includes('בחממה'));
+  assert.equal((await weekData(base, sunday(clarifiedDate))).bookings.length, 0);
+  await screenshot('itzik-clarification');
+  await page.locator('#booking-dialog [data-close]').first().click();
+
+  // A fresh complete request takes precedence over an unfinished older one.
+  await askItzik(incomplete);
+  await askItzik('תרשום אותי ליום חמישי בצהריים ב מרכז');
+  await page.locator('#booking-dialog').waitFor({ state: 'visible' });
+  const freshDate = await page.locator('#booking-date').inputValue();
+  assert.equal(new Date(`${freshDate}T12:00:00Z`).getUTCDay(), 4);
+  assert.equal(await page.locator('#booking-period').inputValue(), 'afternoon');
+  await page.locator('#booking-dialog [data-close]').first().click();
+  await askItzik(incomplete);
+  await askItzik('אל תרשום אותי בחממה');
+  assert(await page.locator('#booking-dialog').isHidden());
+  assert.equal((await weekData(base, sunday(clarifiedDate))).bookings.length, 0);
+
+  // True fragment completion across three messages, and a colloquial correction.
+  await askItzik('תקבע לי ליום שלישי');
+  await askItzik('בבוקר');
+  assert(await page.locator('#booking-dialog').isHidden());
+  await askItzik('לא, מהבית');
+  await page.locator('#booking-dialog').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#booking-location').inputValue(), 'home');
+  assert.equal(await page.locator('#booking-period').inputValue(), 'morning');
+  await page.locator('#booking-dialog [data-close]').first().click();
+
+  // Contradictory days discard the unusable context, then a fresh request works.
+  await askItzik(incomplete);
+  await askItzik('ביום חמישי');
+  await askItzik('בחממה');
+  assert(await page.locator('#booking-dialog').isHidden());
+  await askItzik('תקבע לי יום רביעי בצהרים בחממה');
+  await page.locator('#booking-dialog').waitFor({ state: 'visible' });
+  const colloquialDate = await page.locator('#booking-date').inputValue();
+  assert.equal(new Date(`${colloquialDate}T12:00:00Z`).getUTCDay(), 3);
+  assert.equal(await page.locator('#booking-period').inputValue(), 'afternoon');
+  assert.equal(await page.locator('#booking-location').inputValue(), 'center');
+  await screenshot('itzik-colloquial');
+  await page.locator('#booking-dialog [data-close]').first().click();
+
+  // Week navigation clears incomplete dialogue context.
+  await askItzik(incomplete);
+  await page.locator('#next-week').click();
+  await calendarReady();
+  await askItzik('בחממה');
+  assert(await page.locator('#booking-dialog').isHidden());
   await page.locator('#wolfe-text').fill('תרשמי אותי ליום שלישי בבוקר מהבית');
   await page.locator('#wolfe-submit').click();
   await page.locator('#booking-dialog').waitFor({ state: 'visible' });

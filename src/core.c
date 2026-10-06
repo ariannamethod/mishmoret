@@ -1,5 +1,6 @@
 #include "app.h"
 #include <ctype.h>
+#include <arpa/inet.h>
 #include <sodium.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -319,28 +320,76 @@ static Result session(const Identity *u) {
     js(o, "csrf", u->csrf);
     return result(200, o);
 }
-/* All requests arrive through the same loopback proxy. A short global budget
-   bounds password hashing work without imposing a shared 15-minute IP ban. */
-static int hash_budget(void) {
-    static double tokens = 20.0, previous = 0.0;
+/* Single HTTP worker owns these buckets. No sleeps and no account-wide lock.
+   The opt-in proxy mode is for Tailscale Serve/Funnel, which REPLACES XFF.
+   Never enable it behind a proxy that merely appends an untrusted header. */
+static int hash_budget(App *a, struct MHD_Connection *c, double cost) {
+    unsigned char key[17] = {0};
+    const union MHD_ConnectionInfo *info =
+        MHD_get_connection_info(c, MHD_CONNECTION_INFO_CLIENT_ADDRESS);
+    if (!info || !info->client_addr)
+        return 0;
+    const struct sockaddr *addr = info->client_addr;
+    int loopback = 0;
+    if (addr->sa_family == AF_INET) {
+        const struct sockaddr_in *v4 = (const struct sockaddr_in *)addr;
+        key[0] = 4;
+        memcpy(key + 1, &v4->sin_addr, 4);
+        loopback = key[1] == 127;
+    } else if (addr->sa_family == AF_INET6) {
+        const struct sockaddr_in6 *v6 = (const struct sockaddr_in6 *)addr;
+        key[0] = 6;
+        memcpy(key + 1, &v6->sin6_addr, 16);
+        loopback = IN6_IS_ADDR_LOOPBACK(&v6->sin6_addr);
+    } else
+        return 0;
+    if (a->trust_tailscale_proxy && loopback) {
+        const char *forwarded = MHD_lookup_connection_value(c, MHD_HEADER_KIND, "X-Forwarded-For");
+        if (forwarded) {
+            unsigned char raw[16] = {0};
+            int family = inet_pton(AF_INET, forwarded, raw) == 1 ? 4 :
+                         inet_pton(AF_INET6, forwarded, raw) == 1 ? 6 : 0;
+            if (!family) return 0; /* Lists, ports and malformed values are not Tailscale XFF. */
+            memset(key, 0, sizeof key);
+            key[0] = (unsigned char)family;
+            memcpy(key + 1, raw, family == 4 ? 4u : 16u);
+        }
+    }
+    /* Canonicalize mapped IPv4; group IPv6 clients by /64. */
+    if (key[0] == 6) {
+        static const unsigned char mapped[12] = {0,0,0,0,0,0,0,0,0,0,255,255};
+        if (!memcmp(key + 1, mapped, sizeof mapped)) {
+            memmove(key + 1, key + 13, 4);
+            memset(key + 5, 0, 12);
+            key[0] = 4;
+        } else
+            memset(key + 9, 0, 8);
+    }
     struct timespec ts;
-    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
-        return 0;
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) return 0;
     double now = (double)ts.tv_sec + (double)ts.tv_nsec / 1000000000.0;
-    if (previous == 0.0)
-        previous = now;
-    tokens += (now - previous) * 2.0;
-    if (tokens > 20.0)
-        tokens = 20.0;
-    previous = now;
-    if (tokens < 1.0)
-        return 0;
-    tokens -= 1.0;
+    HashBucket *bucket = NULL, *reusable = NULL;
+    for (size_t i = 0; i < sizeof a->hash_buckets / sizeof a->hash_buckets[0]; i++) {
+        HashBucket *candidate = &a->hash_buckets[i];
+        if (candidate->key[0] && !memcmp(candidate->key, key, sizeof key)) {
+            bucket = candidate;
+            break;
+        }
+        if (!reusable && (!candidate->key[0] || now - candidate->updated >= 100.0))
+            reusable = candidate;
+    }
+    if (!bucket) {
+        if (!(bucket = reusable)) return 0; /* Never evict an active client's limit. */
+        memcpy(bucket->key, key, sizeof key);
+        bucket->tokens = 20.0;
+        bucket->updated = now;
+    }
+    bucket->tokens += (now - bucket->updated) * 0.2;
+    if (bucket->tokens > 20.0) bucket->tokens = 20.0;
+    bucket->updated = now;
+    if (bucket->tokens < cost) return 0;
+    bucket->tokens -= cost;
     return 1;
-}
-static int locked(sqlite3_stmt *s, int count_col, int since_col) {
-    return sqlite3_column_int(s, count_col) >= 8 &&
-           sqlite3_column_int64(s, since_col) > (sqlite3_int64)time(NULL) - 900;
 }
 static int record_failure(App *a, int uid) {
     sqlite3_stmt *s =
@@ -355,27 +404,22 @@ static int record_failure(App *a, int uid) {
     sqlite3_bind_int(s, 4, uid);
     return run(s);
 }
-static Result login(App *a, json_object *j) {
+static Result login(App *a, struct MHD_Connection *c, json_object *j) {
     const char *name = str(j, "login", 64), *pw = str(j, "password", 128);
     if (!name || !pw || !*pw)
         return fail(400, "invalid_login", "Login and password are required");
-    if (!hash_budget())
+    if (!hash_budget(a, c, 1.0))
         return fail(429, "busy", "Too many attempts; retry shortly");
     sqlite3_stmt *s =
         stmt(a, "SELECT id,password,active,fail_count,fail_since FROM users WHERE login=?");
     if (!s)
         return dberr(a);
     bind_text(s, 1, name);
-    int uid = 0, valid = 0, rc = sqlite3_step(s);
+    int uid = 0, valid = 0, password_valid = 0, rc = sqlite3_step(s);
     if (rc == SQLITE_ROW) {
         uid = sqlite3_column_int(s, 0);
-        if (locked(s, 3, 4)) {
-            sqlite3_finalize(s);
-            return fail(429, "rate_limited",
-                        "Too many attempts for this account; retry in 15 minutes");
-        }
-        valid =
-            crypto_pwhash_str_verify(col(s, 1), pw, strlen(pw)) == 0 && sqlite3_column_int(s, 2);
+        password_valid = crypto_pwhash_str_verify(col(s, 1), pw, strlen(pw)) == 0;
+        valid = password_valid && sqlite3_column_int(s, 2);
     } else if (rc == SQLITE_DONE) {
         /* Unknown names consume the same KDF budget but cannot evict counters. */
         char dummy[crypto_pwhash_STRBYTES];
@@ -390,7 +434,7 @@ static Result login(App *a, json_object *j) {
     }
     sqlite3_finalize(s);
     if (!valid) {
-        if (uid && !record_failure(a, uid))
+        if (uid && !password_valid && !record_failure(a, uid))
             return dberr(a);
         return fail(401, "invalid_credentials", "Invalid login or password");
     }
@@ -441,11 +485,12 @@ static Result login(App *a, json_object *j) {
     audit(a, uid, "login", uid);
     return r;
 }
-static Result password(App *a, const Identity *u, json_object *j) {
+static Result password(App *a, struct MHD_Connection *c, const Identity *u, json_object *j) {
     const char *old = str(j, "old_password", 128), *pw = str(j, "new_password", 128);
-    if (!old || !pw || strlen(pw) < 12 || !strcmp(old, pw))
-        return fail(400, "invalid_password", "Use a new password of 12–128 bytes");
-    if (!hash_budget())
+    if (!old || !pw || textwithin(pw, 11) || !strcmp(old, pw))
+        return fail(400, "invalid_password",
+                    "Use a new password of at least 12 characters, up to 128 UTF-8 bytes");
+    if (!hash_budget(a, c, 2.0))
         return fail(429, "busy", "Too many attempts; retry shortly");
     sqlite3_stmt *s = stmt(a, "SELECT password,fail_count,fail_since FROM users WHERE id=?");
     if (!s)
@@ -455,10 +500,6 @@ static Result password(App *a, const Identity *u, json_object *j) {
         sqlite3_finalize(s);
         return dberr(a);
     }
-    if (locked(s, 1, 2)) {
-        sqlite3_finalize(s);
-        return fail(429, "rate_limited", "Too many attempts for this account; retry in 15 minutes");
-    }
     int verified = crypto_pwhash_str_verify(col(s, 0), old, strlen(old)) == 0;
     sqlite3_finalize(s);
     if (!verified) {
@@ -466,7 +507,10 @@ static Result password(App *a, const Identity *u, json_object *j) {
             return dberr(a);
         return fail(403, "wrong_password", "Current password is incorrect");
     }
-    char hash[crypto_pwhash_STRBYTES];
+    char hash[crypto_pwhash_STRBYTES], token[65], session_hash[65], csrf[65];
+    hexrandom(token);
+    digest(token, session_hash);
+    hexrandom(csrf);
     if (!hashpassword(pw, hash))
         return fail(503, "unavailable", "Try again later");
     if (!execsql(a, "BEGIN IMMEDIATE"))
@@ -485,11 +529,25 @@ static Result password(App *a, const Identity *u, json_object *j) {
     bind_text(s, 2, u->session_hash);
     if (!run(s))
         goto bad;
+    s = stmt(a, "UPDATE sessions SET hash=?,csrf=?,expires=? WHERE hash=?");
+    if (!s) goto bad;
+    bind_text(s, 1, session_hash);
+    bind_text(s, 2, csrf);
+    sqlite3_bind_int64(s, 3, (sqlite3_int64)time(NULL) + 28800);
+    bind_text(s, 4, u->session_hash);
+    if (!run(s)) goto bad;
     if (!execsql(a, "COMMIT"))
         goto bad;
     audit(a, u->id, "password_changed", u->id);
-    return ok();
+    Result r = ok();
+    js(r.json, "csrf", csrf);
+    snprintf(r.cookie, sizeof r.cookie,
+             "mishmeret_session=%s; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800%s",
+             token, a->secure ? "; Secure" : "");
+    sodium_memzero(token, sizeof token);
+    return r;
 bad:
+    sodium_memzero(token, sizeof token);
     execsql(a, "ROLLBACK");
     return dberr(a);
 }
@@ -552,13 +610,23 @@ static Result wolfe_command(App *a, json_object *j) {
     json_object_object_add(out, "proposal", NULL);
     js(out, "message",
        !strcmp(status, "ambiguous")           ? "יש כמה אפשרויות. נסו לפרט את הבקשה."
-       : !strcmp(status, "missing_arguments") ? "צריך לציין יום, זמן והאם לומדים מהבית או במרכז."
+       : !strcmp(status, "missing_arguments") ? "צריך לציין יום, זמן והאם לומדים מהבית או בחממה."
                                               : "לא נבחרה פעולה. אפשר לנסח בקשה חדשה.");
     if (strcmp(status, "call")) {
         json_object *missing = NULL;
         if (json_object_object_get_ex(decision, "missing", &missing) &&
-            json_object_is_type(missing, json_type_array))
+            json_object_is_type(missing, json_type_array)) {
             json_object_object_add(out, "missing", json_object_get(missing));
+            if (json_object_array_length(missing) == 1) {
+                const char *field = json_object_get_string(json_object_array_get_idx(missing, 0));
+                if (field && !strcmp(field, "location"))
+                    js(out, "message", "איפה לומדים — מהבית או בחממה?");
+                else if (field && !strcmp(field, "period"))
+                    js(out, "message", "מתי — בבוקר, אחר הצהריים או יום מלא?");
+                else if (field && !strcmp(field, "day"))
+                    js(out, "message", "באיזה יום — ראשון עד חמישי, היום או מחר?");
+            }
+        }
         json_object_put(decision);
         return result(200, out);
     }
@@ -1068,7 +1136,7 @@ Result api(App *a, struct MHD_Connection *c, const char *url, const char *method
             return fail(403, "invalid_origin", "Request origin is not allowed");
     }
     if (!strcmp(url, "/api/login"))
-        return post ? login(a, j) : fail(405, "method_not_allowed", "POST required");
+        return post ? login(a, c, j) : fail(405, "method_not_allowed", "POST required");
     Identity u;
     identity(a, c, &u);
     if (!strcmp(url, "/api/session") && get)
@@ -1094,7 +1162,7 @@ Result api(App *a, struct MHD_Connection *c, const char *url, const char *method
         return r;
     }
     if (!strcmp(url, "/api/password") && post)
-        return password(a, &u, j);
+        return password(a, c, &u, j);
     if (u.must_change)
         return fail(403, "password_change_required", "Change your temporary password first");
     if (!strcmp(url, "/api/wolfe"))

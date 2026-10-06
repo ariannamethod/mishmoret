@@ -16,6 +16,7 @@ static void usage(void) {
     fprintf(stderr, "mishmeret " APP_VERSION "\n"
                     "  --init --db FILE                  create four initial admin accounts\n"
                     "  --db FILE --web DIR --port PORT [--origin URL]   run loopback server\n"
+                    "  --trust-tailscale-proxy           accept sanitized X-Forwarded-For from loopback\n"
                     "  --backup NEW_FILE --db FILE       consistent online SQLite backup\n"
                     "  --restore BACKUP --db FILE        restore while server is stopped\n");
 }
@@ -240,6 +241,10 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[i], "--version")) {
             puts(APP_VERSION);
             return 0;
+        }
+        if (!strcmp(argv[i], "--trust-tailscale-proxy")) {
+            a.trust_tailscale_proxy = 1;
+            continue;
         }
         if (!strcmp(argv[i], "--init")) {
             init = 1;

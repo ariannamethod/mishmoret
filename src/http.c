@@ -61,6 +61,9 @@ static enum MHD_Result asset(App *a, struct MHD_Connection *c, const char *url,
     } else if (!strcmp(url, "/app.js")) {
         name = "app.js";
         type = "text/javascript; charset=utf-8";
+    } else if (!strcmp(url, "/itzik.svg")) {
+        name = "itzik.svg";
+        type = "image/svg+xml";
     } else if (!strcmp(url, "/style.css")) {
         name = "style.css";
         type = "text/css; charset=utf-8";

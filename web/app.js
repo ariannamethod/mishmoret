@@ -1,10 +1,12 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
+function itzikFace() { return $("itzik-face-template").content.cloneNode(true); }
+document.querySelectorAll("[data-itzik-avatar]").forEach((slot) => slot.append(itzikFace()));
 const labels = {
   periods: { morning: "בוקר", afternoon: "אחר הצהריים", full: "יום מלא" },
-  locations: { center: "במרכז", home: "מהבית", all: "כל המקומות" },
-  roles: { admin: "ניהול · דיקטטור", member: "משתתף / משתתפת" },
+  locations: { center: "בחממה", home: "מהבית", all: "כל המקומות" },
+  roles: { admin: "ניהול · דיקטטרורית", member: "משתתף / משתתפת" },
 };
 const errors = {
   invalid_credentials: "שם המשתמש או הסיסמה אינם נכונים.",
@@ -91,7 +93,7 @@ const state = {
   user: null, csrf: "", start: sunday(jerusalemToday()), mineOnly: false,
   week: null, users: [], view: "week", adminTab: "people", weekRequest: 0,
   editingUser: null, credentialAfterClose: null, toastTimer: null,
-  wolfeRequest: 0, wolfeProposal: false, wolfePendingBubble: null,
+  wolfeRequest: 0, wolfeProposal: false, wolfePendingBubble: null, wolfeIncompleteText: "", wolfeMissing: [],
 };
 
 async function api(path, { method = "GET", body } = {}) {
@@ -484,6 +486,9 @@ function openBooking(date = defaultBookingDate(), proposal = null) {
 }
 
 function resetWolfe(clearText = true) {
+  state.wolfeIncompleteText = "";
+  state.wolfeMissing = [];
+  $("wolfe-chat").dataset.mood = "idle";
   state.wolfeRequest += 1;
   const form = $("wolfe-form");
   if (form.getAttribute("aria-busy") === "true") setFormBusy(form, false);
@@ -510,7 +515,11 @@ function setWeek(start) {
 }
 function appendWolfeMessage(role, text) {
   const message = node("article", `wolfe-message ${role}`);
-  if (role !== "context") message.append(node("span", "wolfe-speaker", role === "user" ? "אני" : "איציק"));
+  if (role !== "context") {
+    const speaker = node("span", "wolfe-speaker", role === "user" ? "אני" : "איציק");
+    if (role === "assistant") speaker.prepend(itzikFace());
+    message.append(speaker);
+  }
   const paragraph = node("p", "wolfe-text", text);
   paragraph.dir = "auto";
   message.append(paragraph);
@@ -564,17 +573,46 @@ $("wolfe-form").addEventListener("submit", async (event) => {
   const userId = state.user.id;
   const csrf = state.csrf;
   const week = state.start;
+  const incomplete = state.wolfeIncompleteText;
+  const previousMissing = state.wolfeMissing;
   const current = () => request === state.wolfeRequest && state.user?.id === userId && state.csrf === csrf && state.start === week;
   setFormBusy(form, true);
   appendWolfeMessage("user", text);
   $("wolfe-text").value = "";
   const reply = appendWolfeMessage("assistant", "בודק את הבקשה…");
+  $("wolfe-chat").dataset.mood = "thinking";
   state.wolfePendingBubble = reply;
   $("wolfe-result").textContent = "איציק בודק את הבקשה…";
   $("wolfe-result").hidden = false;
   try {
-    const result = await api("/api/wolfe", { method: "POST", body: { text, week_start: week } });
+    let interpretedText = text;
+    let combined = false;
+    let result = await api("/api/wolfe", { method: "POST", body: { text, week_start: week } });
     if (!current()) return;
+    // A new recognizable command takes precedence. Only an otherwise unhandled
+    // reply can complete the previous unfinished request, within this session/week.
+    if (result.status === "no_call" && incomplete) {
+      // A short correction answers the pending location question. A bare
+      // negation or a negative request still passes through Wolfe unchanged.
+      const correction = previousMissing.includes("location")
+        ? text.match(/^לא\s*[,،]\s*(מהבית|בבית|בית|בחממה|מהחממה|חממה)[.!]?$/u) : null;
+      interpretedText = `${incomplete} ${correction ? correction[1] : text}`;
+      combined = true;
+      if (new TextEncoder().encode(interpretedText).length > 512) {
+        state.wolfeIncompleteText = "";
+        throw new Error("הבקשה וההשלמה ארוכות מדי. כתבו בקשה חדשה וקצרה עם יום, זמן ומקום.");
+      }
+      result = await api("/api/wolfe", { method: "POST", body: { text: interpretedText, week_start: week } });
+    }
+    if (!current()) return;
+    const missing = Array.isArray(result.missing) ? result.missing : [];
+    const progressed = missing.length < previousMissing.length && missing.every(key => previousMissing.includes(key));
+    const keep = result.status === "missing_arguments" && (!combined || progressed);
+    state.wolfeIncompleteText = keep ? interpretedText : "";
+    state.wolfeMissing = keep ? missing : [];
+    if (combined && result.status === "missing_arguments" && !progressed)
+      result.message = "הפרטים לא מסתדרים יחד. נתחיל מחדש — איזה יום, זמן ומקום?";
+    $("wolfe-chat").dataset.mood = result.status === "call" ? "ready" : "puzzled";
     reply.text.textContent = result.message || "אפשר לנסח את הבקשה שוב עם יום, זמן ומקום.";
     state.wolfePendingBubble = null;
     $("wolfe-result").textContent = "";
@@ -598,6 +636,8 @@ $("wolfe-form").addEventListener("submit", async (event) => {
     }
   } catch (error) {
     if (current()) {
+      state.wolfeIncompleteText = "";
+      $("wolfe-chat").dataset.mood = "puzzled";
       reply.text.textContent = error.message;
       state.wolfePendingBubble = null;
       $("wolfe-result").hidden = true;

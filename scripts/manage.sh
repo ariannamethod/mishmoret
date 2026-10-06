@@ -51,7 +51,13 @@ case "$ACTION" in
     start)
         [ -e "$DB" ] || initialize
         printf 'Open %s (Ctrl-C to stop).\n' "$ORIGIN" >&2
-        exec "$BIN" --db "$DB" --web "$ROOT/web" --port "$PORT" --origin "$ORIGIN"
+        set --
+        case "${MISHMERET_TRUST_TAILSCALE_PROXY:-0}" in
+            0) ;;
+            1) set -- --trust-tailscale-proxy ;;
+            *) fail "MISHMERET_TRUST_TAILSCALE_PROXY must be 0 or 1" ;;
+        esac
+        exec "$BIN" "$@" --db "$DB" --web "$ROOT/web" --port "$PORT" --origin "$ORIGIN"
         ;;
     backup)
         [ -f "$DB" ] || fail "Database not found: $DB"

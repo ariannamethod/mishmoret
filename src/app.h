@@ -11,6 +11,12 @@
 #define APP_VERSION "0.2.0"
 #define MAX_BODY 16384
 typedef struct {
+    unsigned char key[17];
+    double tokens, updated;
+} HashBucket;
+typedef struct {
+    HashBucket hash_buckets[1024];
+    int trust_tailscale_proxy;
     sqlite3 *db;
     Wolfe *wolf;
     char origin[512], web[4096];

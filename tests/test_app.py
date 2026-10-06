@@ -36,8 +36,10 @@ class Client:
         self.cookies = {}
         self.csrf = None
 
-    def request(self, method, path, data=None, *, origin=True, csrf=True, raw=None, chunks=None):
+    def request(self, method, path, data=None, *, origin=True, csrf=True, raw=None, chunks=None, forwarded=None):
         headers = {}
+        if forwarded is not None:
+            headers["X-Forwarded-For"] = forwarded
         if origin is not False:
             headers["Origin"] = self.origin if origin is True else origin
         if self.cookies:
@@ -120,7 +122,7 @@ class AppTests(unittest.TestCase):
     def start_server(self):
         self.process = subprocess.Popen(
             [str(BINARY), "--db", str(self.db), "--web", str(ROOT / "web"),
-             "--port", str(self.port), "--origin", f"http://127.0.0.1:{self.port}"],
+             "--port", str(self.port), "--origin", f"http://127.0.0.1:{self.port}"] + getattr(self, "server_options", []),
             stdout=self.log, stderr=self.log,
         )
         deadline = time.monotonic() + 10
@@ -258,6 +260,19 @@ class AppTests(unittest.TestCase):
             self.rejected(client.request("POST", "/api/password", {"old_password": old, "new_password": new}))
         self.assertTrue(self.ok(client.request("GET", "/api/session"))["user"]["must_change_password"])
 
+    def test_password_minimum_counts_characters_not_utf8_bytes(self):
+        client = self.login(change=False)
+        old = self.accounts["oleg2"]["password"]
+        for short in ["a" * 11, "אבגדהו", "🙂" * 3]:
+            with self.subTest(password=short):
+                self.rejected(client.request("POST", "/api/password", {
+                    "old_password": old, "new_password": short,
+                }), 400)
+        self.ok(client.request("POST", "/api/password", {
+            "old_password": old, "new_password": "אבגדהוזחטיכל",
+        }))
+        self.login(password="אבגדהוזחטיכל")
+
     def test_login_requires_exact_origin(self):
         for origin in [False, "null", "https://attacker.invalid", f"http://127.0.0.1:{self.port}.attacker.invalid"]:
             with self.subTest(origin=origin):
@@ -367,7 +382,7 @@ class AppTests(unittest.TestCase):
         for half in ["morning", "afternoon"]:
             self.rejected(self.book(second, day=1, period=half, resource_id=desk["id"]), 409)
 
-    def test_simultaneous_resource_booking_has_exactly_one_winner(self):
+    def test_serialized_http_resource_requests_have_exactly_one_winner(self):
         first, second = self.login(), self.login("oleg1")
         desk = self.resource(first)
         barrier = threading.Barrier(2)
@@ -700,38 +715,89 @@ class AppTests(unittest.TestCase):
         self.ok(Client(self.port).request("GET", "/healthz", origin=False))
         self.ok(self.book(self.login(), location="home"))
 
-    def test_failed_login_lock_is_per_account_persistent_and_resettable(self):
-        def attempt(login, password):
-            deadline = time.monotonic() + 4
-            while True:
-                response = Client(self.port).request("POST", "/api/login", {
-                    "login": login, "password": password,
-                })
-                if response[0] != 429 or response[1].get("error") != "busy":
-                    return response
-                self.assertLess(time.monotonic(), deadline, "Global hashing budget did not recover")
-                time.sleep(0.55)
-
+    def test_wrong_passwords_do_not_lock_the_owner_out(self):
+        attacker = Client(self.port)
         for _ in range(8):
-            self.rejected(attempt("oleg2", "wrong-password-123"), 401)
-        locked = attempt("oleg2", self.accounts["oleg2"]["password"])
-        self.rejected(locked, 429)
-        self.assertEqual(locked[1]["error"], "rate_limited")
-        other = self.login("oleg1")
-        for i in range(40):
-            self.rejected(attempt(f"unknown-account-{i}", "wrong-password-123"), 401)
-        locked = attempt("oleg2", self.accounts["oleg2"]["password"])
-        self.rejected(locked, 429)
-        self.assertEqual(locked[1]["error"], "rate_limited")
+            self.rejected(attacker.request("POST", "/api/login", {
+                "login": "oleg2", "password": "wrong-password-123",
+            }), 401)
+        # Even the same source still gets its valid password checked after eight errors.
+        self.ok(attacker.request("POST", "/api/login", {
+            "login": "oleg2", "password": self.accounts["oleg2"]["password"],
+        }))
         self.stop_server()
+        with sqlite3.connect(self.db) as database:
+            database.execute("UPDATE users SET fail_count=99,fail_since=strftime('%s','now')")
         self.start_server()
-        locked = attempt("oleg2", self.accounts["oleg2"]["password"])
-        self.rejected(locked, 429)
-        self.assertEqual(locked[1]["error"], "rate_limited")
-        target = next(u for u in self.users(other) if u["login"] == "oleg2")
-        reset = self.ok(other.request("POST", "/api/admin/reset-password", {"id": target["id"]}))
-        recovered = self.login("oleg2", reset["temporary_password"])
-        self.ok(self.book(recovered, location="home"))
+        self.login()
+
+    def test_untrusted_forwarded_headers_cannot_reset_hash_budget(self):
+        attacker = Client(self.port)
+        statuses = []
+        for i in range(26):
+            statuses.append(attacker.request("POST", "/api/login", {
+                "login": "oleg2", "password": "wrong-password-123",
+            }, forwarded=f"192.0.2.{i+1}")[0])
+        self.assertIn(429, statuses)
+        self.assertEqual(statuses[-1], 429)
+        self.rejected(attacker.request("POST", "/api/login", {
+            "login": "oleg2", "password": self.accounts["oleg2"]["password"],
+        }, forwarded="192.0.2.254"), 429)
+
+    def test_tailscale_proxy_limit_uses_validated_client_address(self):
+        self.stop_server()
+        self.server_options = ["--trust-tailscale-proxy"]
+        self.start_server()
+        client = Client(self.port)
+        payload = {"login": "oleg2", "password": "wrong-password-123"}
+        for _ in range(26):
+            response = client.request("POST", "/api/login", payload, forwarded="192.0.2.1")
+        self.rejected(response, 429)
+        # A mapped IPv4 address must not open another bucket for the same client.
+        self.rejected(client.request("POST", "/api/login", payload,
+                                     forwarded="::ffff:192.0.2.1"), 429)
+        self.ok(client.request("POST", "/api/login", {
+            "login": "oleg2", "password": self.accounts["oleg2"]["password"],
+        }, forwarded="192.0.2.2"))
+        for forged in ["192.0.2.1, 192.0.2.2", "garbage", "192.0.2.1:1234"]:
+            self.rejected(client.request("POST", "/api/login", payload, forwarded=forged), 429)
+        for i in range(26):
+            response = client.request("POST", "/api/login", payload,
+                                      forwarded=f"2001:db8:1:2::{i+1:x}")
+        self.rejected(response, 429)  # IPv6 privacy addresses share the /64 bucket.
+        self.rejected(client.request("POST", "/api/login", payload,
+                                     forwarded="2001:db8:1:3::1"), 401)
+
+    def test_password_change_rotates_session_and_csrf_and_revokes_other_sessions(self):
+        client = self.login()
+        other = self.login()
+        stolen = Client(self.port)
+        stolen.cookies = client.cookies.copy()
+        stolen.csrf = client.csrf
+        old_csrf = client.csrf
+        self.ok(client.request("POST", "/api/password", {
+            "old_password": self.passwords["oleg2"], "new_password": "Changed-password-2026!",
+        }))
+        self.assertNotEqual(client.cookies, stolen.cookies)
+        self.assertNotEqual(client.csrf, old_csrf)
+        self.assertIsNone(self.ok(stolen.request("GET", "/api/session"))["user"])
+        self.assertIsNone(self.ok(other.request("GET", "/api/session"))["user"])
+        self.rejected(client.request(
+            "POST", "/api/bookings", {"date": DAYS[0], "period": "morning", "location": "home"},
+            csrf=old_csrf), 403)
+        self.ok(self.book(client, location="home"))
+
+    def test_booking_failure_rolls_back_a_partially_applied_statement(self):
+        admin = self.login()
+        # RAISE(FAIL) preserves the statement's earlier changes unless the caller rolls back.
+        with sqlite3.connect(self.db) as database:
+            database.execute("CREATE TRIGGER injected_failure AFTER INSERT ON bookings BEGIN "
+                             "SELECT RAISE(FAIL, 'injected write failure'); END")
+        self.rejected(self.book(admin, location="home"), 500)
+        self.assertEqual(self.week(admin)["bookings"], [])
+        with sqlite3.connect(self.db) as database:
+            database.execute("DROP TRIGGER injected_failure")
+        self.ok(self.book(admin, location="home"))
 
     def test_restore_rejects_backup_trigger_without_touching_destination(self):
         admin = self.login()

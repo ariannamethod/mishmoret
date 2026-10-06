@@ -155,3 +155,85 @@
 {"text":"רשמו אותי בבקשה מהבית ביום חמישי למשמרת מלאה","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"home"}}
 {"text":"תרשום אותי בבקשה במרכז ביום חמישי למשמרת מלאה","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"center"}}
 {"text":"תרשמי אותי בבקשה ליום חמישי למשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"center"}}
+{"text":"תקבע לי ליום ראשון בבוקר בחממה","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"center"}}
+{"text":"קבע לי ראשון צהרים מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"home"}}
+{"text":"אפשר לקבוע לי ראשון יום מלא באנטר","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"center"}}
+{"text":"יום ראשון חממה צהרים","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"center"}}
+{"text":"ראשון בוקר בית","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"home"}}
+{"text":"יאללה שים אותי בראשון בבוקר בחממה","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"center"}}
+{"text":"סגור לי ראשון אחהצ בחממה","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"center"}}
+{"text":"איציק תשריין לי יום ראשון בבוקר מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"home"}}
+{"text":"תרשום אותי ליום ראשון בצהרים בחממה","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"center"}}
+{"text":"תקבע לי ליום שני בבוקר בחממה","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"center"}}
+{"text":"קבע לי שני צהרים מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"home"}}
+{"text":"אפשר לקבוע לי שני יום מלא באנטר","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"center"}}
+{"text":"יום שני חממה צהרים","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"center"}}
+{"text":"שני בוקר בית","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"home"}}
+{"text":"יאללה שים אותי בשני בבוקר בחממה","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"center"}}
+{"text":"סגור לי שני אחהצ בחממה","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"center"}}
+{"text":"איציק תשריין לי יום שני בבוקר מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"home"}}
+{"text":"תרשום אותי ליום שני בצהרים בחממה","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"center"}}
+{"text":"תקבע לי ליום שלישי בבוקר בחממה","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"center"}}
+{"text":"קבע לי שלישי צהרים מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"home"}}
+{"text":"אפשר לקבוע לי שלישי יום מלא באנטר","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"center"}}
+{"text":"יום שלישי חממה צהרים","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"center"}}
+{"text":"שלישי בוקר בית","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"home"}}
+{"text":"יאללה שים אותי בשלישי בבוקר בחממה","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"center"}}
+{"text":"סגור לי שלישי אחהצ בחממה","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"center"}}
+{"text":"איציק תשריין לי יום שלישי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"home"}}
+{"text":"תרשום אותי ליום שלישי בצהרים בחממה","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"center"}}
+{"text":"תקבע לי ליום רביעי בבוקר בחממה","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"קבע לי רביעי צהרים מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"home"}}
+{"text":"אפשר לקבוע לי רביעי יום מלא באנטר","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"center"}}
+{"text":"יום רביעי חממה צהרים","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"center"}}
+{"text":"רביעי בוקר בית","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"home"}}
+{"text":"יאללה שים אותי ברביעי בבוקר בחממה","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"סגור לי רביעי אחהצ בחממה","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"center"}}
+{"text":"איציק תשריין לי יום רביעי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"home"}}
+{"text":"תרשום אותי ליום רביעי בצהרים בחממה","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"center"}}
+{"text":"תקבע לי ליום חמישי בבוקר בחממה","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"center"}}
+{"text":"קבע לי חמישי צהרים מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"home"}}
+{"text":"אפשר לקבוע לי חמישי יום מלא באנטר","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"center"}}
+{"text":"יום חמישי חממה צהרים","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"center"}}
+{"text":"חמישי בוקר בית","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"home"}}
+{"text":"יאללה שים אותי בחמישי בבוקר בחממה","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"center"}}
+{"text":"סגור לי חמישי אחהצ בחממה","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"center"}}
+{"text":"איציק תשריין לי יום חמישי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"home"}}
+{"text":"תרשום אותי ליום חמישי בצהרים בחממה","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"center"}}
+{"text":"אל תקבע לי שלישי בוקר בחממה","tool":null,"arguments":{}}
+{"text":"לא לקבוע לי חמישי צהרים בית","tool":null,"arguments":{}}
+{"text":"אני לא מגיע ברביעי בבוקר לחממה","tool":null,"arguments":{}}
+{"text":"אתמול הייתי בחממה בבוקר","tool":null,"arguments":{}}
+{"text":"אולי שלישי חממה צהרים","tool":null,"arguments":{}}
+{"text":"הוא לומד בשלישי בחממה בבוקר","tool":null,"arguments":{}}
+{"text":"אני בדרך כלל בשלישי חממה צהרים","tool":null,"arguments":{}}
+{"text":"יום ראשון באנטר בבוקר","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"center"}}
+{"text":"יום ראשון מהבית בבוקר","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"home"}}
+{"text":"אפשר לקבוע לי בראשון אחהצ באנטר","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"center"}}
+{"text":"אפשר לקבוע לי בראשון אחהצ מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"home"}}
+{"text":"יום ראשון באנטר יום מלא","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"center"}}
+{"text":"יום ראשון מהבית יום מלא","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"home"}}
+{"text":"אפשר לקבוע לי בשני בבוקר באנטר","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"center"}}
+{"text":"אפשר לקבוע לי בשני בבוקר מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"home"}}
+{"text":"יום שני באנטר אחהצ","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"center"}}
+{"text":"יום שני מהבית אחהצ","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"home"}}
+{"text":"אפשר לקבוע לי בשני יום מלא באנטר","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"center"}}
+{"text":"אפשר לקבוע לי בשני יום מלא מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"home"}}
+{"text":"יום שלישי באנטר בבוקר","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"center"}}
+{"text":"יום שלישי מהבית בבוקר","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"home"}}
+{"text":"אפשר לקבוע לי בשלישי אחהצ באנטר","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"center"}}
+{"text":"אפשר לקבוע לי בשלישי אחהצ מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"home"}}
+{"text":"יום שלישי באנטר יום מלא","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"center"}}
+{"text":"יום שלישי מהבית יום מלא","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"home"}}
+{"text":"אפשר לקבוע לי ברביעי בבוקר באנטר","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"אפשר לקבוע לי ברביעי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"home"}}
+{"text":"יום רביעי באנטר אחהצ","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"center"}}
+{"text":"יום רביעי מהבית אחהצ","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"home"}}
+{"text":"אפשר לקבוע לי ברביעי יום מלא באנטר","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"center"}}
+{"text":"אפשר לקבוע לי ברביעי יום מלא מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"home"}}
+{"text":"יום חמישי באנטר בבוקר","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"center"}}
+{"text":"יום חמישי מהבית בבוקר","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"home"}}
+{"text":"אפשר לקבוע לי בחמישי אחהצ באנטר","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"center"}}
+{"text":"אפשר לקבוע לי בחמישי אחהצ מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"home"}}
+{"text":"יום חמישי באנטר יום מלא","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"center"}}
+{"text":"יום חמישי מהבית יום מלא","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"home"}}

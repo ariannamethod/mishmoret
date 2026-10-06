@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-labelledby="title">
+  <title id="title">איציק — משמרת</title>
+  <circle cx="40" cy="40" r="38" fill="#efe5c9"/>
+  <path d="M14 76Q16 58 40 59Q64 58 66 76" fill="#397866"/>
+  <path d="m29 61 11 11 11-11" fill="#fffaf0"/>
+  <path d="M32 56v8q8 8 16 0v-8" fill="#dba47a"/>
+  <ellipse cx="18" cy="39" rx="6" ry="9" fill="#e9b98d"/>
+  <ellipse cx="62" cy="39" rx="6" ry="9" fill="#e9b98d"/>
+  <path d="M19 28Q18 9 40 10Q63 9 61 32v13q-1 19-21 20Q20 63 19 45Z" fill="#edc39b" stroke="#143b3b" stroke-width="2"/>
+  <path d="M19 34Q10 12 31 12Q32 4 43 11Q64 4 63 29l-8-9-8 3-9-6-12 9-4 10" fill="#143b3b"/>
+  <path class="itzik-brow" d="m24 29 10-3m13 1 10 3" fill="none" stroke="#143b3b" stroke-width="3.5" stroke-linecap="round"/>
+  <g fill="#fffaf0" stroke="#143b3b" stroke-width="2.5">
+    <rect x="21" y="33" width="16" height="13" rx="5"/>
+    <rect x="44" y="33" width="16" height="13" rx="5"/>
+    <path d="M37 37h7m-26-2 3 2m39 0 3-2" fill="none"/>
+  </g>
+  <g class="itzik-pupils" fill="#143b3b"><circle cx="31" cy="39" r="2.5"/><circle cx="51" cy="39" r="2.5"/></g>
+  <path d="m40 39-2 10h5" fill="none" stroke="#bf865e" stroke-width="2" stroke-linecap="round"/>
+  <path d="M29 53q6-9 11-3 5-6 12 2-9 5-12 0-4 5-11 1" fill="#143b3b"/>
+  <path class="itzik-mouth" d="M35 58q7 3 13-2" fill="none" stroke="#143b3b" stroke-width="2" stroke-linecap="round"/>
+</svg>
