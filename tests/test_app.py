@@ -443,6 +443,35 @@ class AppTests(unittest.TestCase):
         self.ok(admin.request("DELETE", f'/api/admin/announcements?id={announcement["id"]}'))
         self.assertEqual(self.week(admin)["announcements"], [])
 
+    def test_announcement_accepts_exact_unicode_codepoint_limits(self):
+        admin = self.login()
+        for label, pattern in [("ASCII", "a"), ("Hebrew", "א"), ("emoji", "🙂"), ("mixed", "Aא🙂")]:
+            with self.subTest(text=label):
+                title = (pattern * 120)[:120]
+                body = (pattern * 1000)[:1000]
+                self.ok(admin.request("POST", "/api/admin/announcements", {
+                    "date": DAYS[0], "end_date": DAYS[0], "title": title, "body": body,
+                }))
+                stored = next(row for row in self.week(admin)["announcements"] if row["title"] == title)
+                self.assertEqual(stored["title"], title)
+                self.assertEqual(stored["body"], body)
+
+    def test_announcement_rejects_one_extra_codepoint_without_changing_data(self):
+        admin = self.login()
+        self.ok(admin.request("POST", "/api/admin/announcements", {
+            "date": DAYS[0], "end_date": DAYS[0], "title": "קיים", "body": "ללא שינוי",
+        }))
+        for label, pattern in [("ASCII", "a"), ("Hebrew", "א"), ("emoji", "🙂"), ("mixed", "Aא🙂")]:
+            for field, limit in [("title", 120), ("body", 1000)]:
+                with self.subTest(text=label, field=field):
+                    payload = {"date": DAYS[0], "end_date": DAYS[0], "title": "כותרת", "body": "תוכן"}
+                    payload[field] = (pattern * (limit + 1))[:limit + 1]
+                    before = self.week(admin)["announcements"]
+                    response = admin.request("POST", "/api/admin/announcements", payload)
+                    after = self.week(admin)["announcements"]
+                    self.assertEqual((response[0], response[1].get("error"), after),
+                                     (400, "invalid_announcement", before))
+
     def test_resource_with_future_booking_cannot_be_disabled(self):
         admin = self.login()
         desk = self.resource(admin)

@@ -706,6 +706,8 @@ bindForm("closure-form", "closure-error", async (values, form) => {
 });
 bindForm("announcement-form", "announcement-error", async (values, form) => {
   if (values.end_date < values.date) throw new Error("תאריך הסיום צריך להיות ביום ההתחלה או אחריו.");
+  if (Array.from(values.title).length > 120) throw new Error("הכותרת יכולה להכיל עד 120 תווים.");
+  if (Array.from(values.body).length > 1000) throw new Error("ההודעה יכולה להכיל עד 1000 תווים.");
   await api("/api/admin/announcements", { method: "POST", body: values });
   $("announcement-dialog").close();
   form.reset();
