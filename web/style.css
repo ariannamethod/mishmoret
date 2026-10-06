@@ -231,6 +231,7 @@ dialog::backdrop { background: #16333477; backdrop-filter: blur(3px); }
   .auth-card { padding: 1.7rem; }
 }
 @media (max-width: 480px) {
+  .toast { top: calc(env(safe-area-inset-top, 0px) + .75rem); bottom: auto; }
   .page-heading { align-items: flex-start; flex-direction: column; }
   .page-heading > .button { width: 100%; }
   .workspace { padding-inline: .85rem; }

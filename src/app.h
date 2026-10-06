@@ -1,5 +1,8 @@
 #ifndef MISHMERET_APP_H
 #define MISHMERET_APP_H
+#if defined(__APPLE__) && !defined(_DARWIN_C_SOURCE)
+#define _DARWIN_C_SOURCE 1
+#endif
 #include "wolfe_api.h"
 #include <json-c/json.h>
 #include <microhttpd.h>
