@@ -204,6 +204,53 @@ async function main() {
   await screenshot('admin-desktop');
   await page.locator('#nav-week').click();
   await screenshot('week-desktop');
+
+  // Supplementary-plane characters count as one character in both the form and API.
+  let announcementPosts = 0;
+  const countAnnouncementPosts = (request) => {
+    if (request.method() === 'POST' && new URL(request.url()).pathname === '/api/admin/announcements')
+      announcementPosts++;
+  };
+  page.on('request', countAnnouncementPosts);
+  await page.locator('#nav-admin').click();
+  await page.locator('[data-admin-tab=notices]').click();
+  await page.locator('#new-announcement').click();
+  await page.locator('#announcement-date').fill(date);
+  await page.locator('#announcement-end').fill(date);
+  const title = '🙂'.repeat(120);
+  const body = '🙂'.repeat(1000);
+  await page.locator('#announcement-heading').fill(title);
+  await page.locator('#announcement-body').fill(body);
+  assert.equal(await page.locator('#announcement-heading').inputValue(), title);
+  assert.equal(await page.locator('#announcement-body').inputValue(), body);
+  await page.locator('#announcement-form button[type=submit]').click();
+  await page.locator('#announcement-dialog').waitFor({ state: 'hidden' });
+  await calendarReady();
+  const notices = (await weekData(base, start)).announcements;
+  assert.equal(announcementPosts, 1);
+  assert.equal(notices.length, 1);
+  assert.equal(notices[0].title, title);
+  assert.equal(notices[0].body, body);
+  await page.locator('#new-announcement').click();
+  await page.locator('#announcement-date').fill(date);
+  await page.locator('#announcement-end').fill(date);
+  // These are limit+1 code points while still fitting native HTML UTF-16 bounds.
+  for (const invalid of [
+    { title: '🙂'.repeat(119) + 'aa', body, message: 'הכותרת יכולה להכיל עד 120 תווים.' },
+    { title, body: '🙂'.repeat(999) + 'aa', message: 'ההודעה יכולה להכיל עד 1000 תווים.' },
+  ]) {
+    await page.locator('#announcement-heading').fill(invalid.title);
+    await page.locator('#announcement-body').fill(invalid.body);
+    assert.equal(await page.locator('#announcement-heading').inputValue(), invalid.title);
+    assert.equal(await page.locator('#announcement-body').inputValue(), invalid.body);
+    await page.locator('#announcement-form button[type=submit]').click();
+    await page.locator('#announcement-error').waitFor({ state: 'visible' });
+    assert.equal(await page.locator('#announcement-error').textContent(), invalid.message);
+    assert.equal(announcementPosts, 1, 'Over-limit announcement was rejected before POST');
+    assert.deepEqual((await weekData(base, start)).announcements, notices, 'Stored notices unchanged');
+  }
+  await page.locator('#announcement-dialog [data-close]').first().click();
+  page.off('request', countAnnouncementPosts);
   await page.locator('#logout').click();
   await page.locator('#auth-screen').waitFor({ state: 'visible' });
   assert(await page.locator('#wolfe-toggle').isHidden());
@@ -211,7 +258,7 @@ async function main() {
   assert(!(await page.locator('#wolfe-history').textContent()).includes('תראי לי את המשמרות שלי'));
   assert.deepEqual(await page.evaluate(() => window.__cspViolations), [], 'CSP violations');
   assert.deepEqual(errors, [], 'Browser console errors');
-  console.log('PASS: login, password change, four admins, Hebrew Wolfe proposal and confirmed save, chat collapse, shift closure/reopening, desktop/mobile layout, logout and CSP.');
+  console.log('PASS: login, password change, four admins, Hebrew Wolfe proposal and confirmed save, chat collapse, shift closure/reopening, desktop/mobile layout, announcement Unicode limits and roundtrip, logout and CSP.');
 }
 
 main().catch(async (error) => {
