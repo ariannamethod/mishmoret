@@ -35,8 +35,9 @@ Login and password verification use per-source KDF token buckets: burst 20,
 refill one token per five seconds; a password change costs two. IPv4 addresses
 are separate; IPv6 addresses share their /64. The bounded 1024-entry table never
 evicts an active bucket. These counters live in process memory and reset on
-restart. There is no account lock based on failures. Historical fail_count values
-are retained for compatibility, but cannot deny a valid login. HTTP 429 means
+restart. There is no account lock based on failures. Legacy fail_count/fail_since
+columns remain for backup/schema compatibility; authentication no longer reads
+or updates them. HTTP 429 means
 that source must wait; users behind the same NAT share this limit.
 
 By default source means the TCP peer and forwarding headers are ignored.

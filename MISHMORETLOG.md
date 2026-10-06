@@ -2,6 +2,36 @@
 
 Newest entries first. Preserve previous results and append dated corrections.
 
+## 2026-10-06 — Astra: bounded follow-up to Claude's re-audit
+
+- Removed unused account-failure reads/writes. Legacy columns remain untouched
+  for database/backup compatibility. Source-based KDF limits are unchanged.
+- Password-change session secrets are now generated after successful hashing
+  and BEGIN, so the earlier 503/BEGIN-error exits have no new token to retain.
+  The existing success and rollback paths erase the generated token.
+- Extended the existing static/CSP test to fetch /itzik.svg anonymously and
+  verify HTTP 200, exact SVG contents, image/svg+xml and the CSP header.
+- Passed 61 integration tests; four relevant auth/asset tests also passed with
+  ASan/UBSan and leak detection. Previous Chromium run already covers the final
+  Reut-only nickname and neutral management labels; frontend is unchanged here.
+- Completed a bounded UTF-8-preserving mutation run against the embedded Wolfe
+  ABI in neural mode under ASan/UBSan on macOS ARM64. Fixed seed 20261006;
+  2000 inputs, each valid UTF-8 and <=512 bytes, including the 239 corpus seeds.
+  Results: 642 call, 371 no_call, 934 missing_arguments, 52 ambiguous; one input
+  rejected by the existing 95-byte token limit. No sanitizer reports. Recorded
+  input #797 and the rejection; this is a resource-limit result, not a crash.
+  The output collector initially counted serialization's blank lines as records;
+  final accounting uses the numbered nonempty records. An initial zero-error
+  assertion also surfaced the documented token-limit rejection; raw output is
+  preserved. This run checks bounded memory/runtime behavior, not the semantic
+  correctness of arbitrary mutated requests or exhaustive parser coverage.
+- Did not introduce an account-wide pre-password limiter or a shared overflow
+  bucket. Those are design proposals: preserving valid-owner access would need
+  a nonblocking approach, and a shared fallback remains a shared contention
+  point. Full active source tables still reject new sources as documented.
+- Deployed this bounded cleanup to Polygon after backup
+  mishmeret-20261006T031403Z-1123926.db; public health returned 200.
+
 ## 2026-10-06 — Astra: Itzik becomes the project logo; publication authorized
 
 - Oleg authorized committing/pushing the completed repairs and asked to make

@@ -625,6 +625,11 @@ class AppTests(unittest.TestCase):
         self.assertNotIn("unsafe-inline", csp)
         self.assertNotIn("unsafe-eval", csp)
         self.assertIn("frame-ancestors", csp)
+        logo = Client(self.port).request("GET", "/itzik.svg", origin=False)
+        self.assertEqual(logo[0], 200)
+        self.assertEqual(logo[2].get("content-type"), "image/svg+xml")
+        self.assertEqual(logo[1], (ROOT / "web" / "itzik.svg").read_text())
+        self.assertEqual(logo[2].get("content-security-policy"), csp)
 
     def test_path_traversal_cannot_read_database_or_arbitrary_files(self):
         client = self.login()

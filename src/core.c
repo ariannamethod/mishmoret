@@ -391,19 +391,6 @@ static int hash_budget(App *a, struct MHD_Connection *c, double cost) {
     bucket->tokens -= cost;
     return 1;
 }
-static int record_failure(App *a, int uid) {
-    sqlite3_stmt *s =
-        stmt(a, "UPDATE users SET fail_count=CASE WHEN fail_since<=? THEN 1 ELSE fail_count+1 "
-                "END,fail_since=CASE WHEN fail_since<=? THEN ? ELSE fail_since END WHERE id=?");
-    if (!s)
-        return 0;
-    sqlite3_int64 now = (sqlite3_int64)time(NULL);
-    sqlite3_bind_int64(s, 1, now - 900);
-    sqlite3_bind_int64(s, 2, now - 900);
-    sqlite3_bind_int64(s, 3, now);
-    sqlite3_bind_int(s, 4, uid);
-    return run(s);
-}
 static Result login(App *a, struct MHD_Connection *c, json_object *j) {
     const char *name = str(j, "login", 64), *pw = str(j, "password", 128);
     if (!name || !pw || !*pw)
@@ -411,7 +398,7 @@ static Result login(App *a, struct MHD_Connection *c, json_object *j) {
     if (!hash_budget(a, c, 1.0))
         return fail(429, "busy", "Too many attempts; retry shortly");
     sqlite3_stmt *s =
-        stmt(a, "SELECT id,password,active,fail_count,fail_since FROM users WHERE login=?");
+        stmt(a, "SELECT id,password,active FROM users WHERE login=?");
     if (!s)
         return dberr(a);
     bind_text(s, 1, name);
@@ -433,17 +420,8 @@ static Result login(App *a, struct MHD_Connection *c, json_object *j) {
         return dberr(a);
     }
     sqlite3_finalize(s);
-    if (!valid) {
-        if (uid && !password_valid && !record_failure(a, uid))
-            return dberr(a);
+    if (!valid)
         return fail(401, "invalid_credentials", "Invalid login or password");
-    }
-    s = stmt(a, "UPDATE users SET fail_count=0,fail_since=0 WHERE id=?");
-    if (!s)
-        return dberr(a);
-    sqlite3_bind_int(s, 1, uid);
-    if (!run(s))
-        return dberr(a);
     char token[65], hash[65], csrf[65];
     hexrandom(token);
     digest(token, hash);
@@ -492,7 +470,7 @@ static Result password(App *a, struct MHD_Connection *c, const Identity *u, json
                     "Use a new password of at least 12 characters, up to 128 UTF-8 bytes");
     if (!hash_budget(a, c, 2.0))
         return fail(429, "busy", "Too many attempts; retry shortly");
-    sqlite3_stmt *s = stmt(a, "SELECT password,fail_count,fail_since FROM users WHERE id=?");
+    sqlite3_stmt *s = stmt(a, "SELECT password FROM users WHERE id=?");
     if (!s)
         return dberr(a);
     sqlite3_bind_int(s, 1, u->id);
@@ -502,20 +480,18 @@ static Result password(App *a, struct MHD_Connection *c, const Identity *u, json
     }
     int verified = crypto_pwhash_str_verify(col(s, 0), old, strlen(old)) == 0;
     sqlite3_finalize(s);
-    if (!verified) {
-        if (!record_failure(a, u->id))
-            return dberr(a);
+    if (!verified)
         return fail(403, "wrong_password", "Current password is incorrect");
-    }
     char hash[crypto_pwhash_STRBYTES], token[65], session_hash[65], csrf[65];
-    hexrandom(token);
-    digest(token, session_hash);
-    hexrandom(csrf);
     if (!hashpassword(pw, hash))
         return fail(503, "unavailable", "Try again later");
     if (!execsql(a, "BEGIN IMMEDIATE"))
         return dberr(a);
-    s = stmt(a, "UPDATE users SET password=?,must_change=0,fail_count=0,fail_since=0 WHERE id=?");
+    /* Generate session secrets only after the KDF and BEGIN have succeeded. */
+    hexrandom(token);
+    digest(token, session_hash);
+    hexrandom(csrf);
+    s = stmt(a, "UPDATE users SET password=?,must_change=0 WHERE id=?");
     if (!s)
         goto bad;
     bind_text(s, 1, hash);
@@ -978,7 +954,7 @@ static Result resetpassword(App *a, const Identity *u, json_object *j) {
     if (!execsql(a, "BEGIN IMMEDIATE"))
         return dberr(a);
     sqlite3_stmt *s =
-        stmt(a, "UPDATE users SET password=?,must_change=1,fail_count=0,fail_since=0 WHERE id=?");
+        stmt(a, "UPDATE users SET password=?,must_change=1 WHERE id=?");
     if (!s)
         goto bad;
     bind_text(s, 1, hash);
