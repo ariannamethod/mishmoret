@@ -6,7 +6,7 @@ document.querySelectorAll("[data-itzik-avatar]").forEach((slot) => slot.append(i
 const labels = {
   periods: { morning: "בוקר", afternoon: "אחר הצהריים", full: "יום מלא" },
   locations: { center: "בחממה", home: "מהבית", all: "כל המקומות" },
-  roles: { admin: "ניהול · דיקטטרורית", member: "משתתף / משתתפת" },
+  roles: { admin: "ניהול", member: "משתתף / משתתפת" },
 };
 const errors = {
   invalid_credentials: "שם המשתמש או הסיסמה אינם נכונים.",
@@ -384,7 +384,10 @@ async function refreshUsers() {
   const target = $("users-list");
   target.replaceChildren();
   for (const user of state.users) {
-    const details = [user.login, labels.roles[user.role], user.active ? "פעיל" : "לא פעיל"];
+    // Reut's nickname is display text; authorization depends only on the role.
+    const roleLabel = user.role === "admin" && user.login === "reut"
+      ? "ניהול · דיקטטרורית" : labels.roles[user.role];
+    const details = [user.login, roleLabel, user.active ? "פעיל" : "לא פעיל"];
     if (user.must_change_password) details.push("נדרשת החלפת סיסמה");
     const { row, actions } = listRow(user.name, details.join(" · "), !user.active);
     actions.append(button("עריכה", "button subtle small-button", () => openUser(user), `עריכת המשתמש ${user.name}`));

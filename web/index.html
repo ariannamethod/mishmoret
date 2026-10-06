@@ -87,7 +87,7 @@
         <a class="brand" href="/" aria-label="משמרת — דף הבית"><img class="brand-mark brand-avatar" src="/itzik.svg" alt="" width="80" height="80"><span>משמרת<span class="brand-subtitle">אנטר, באר שבע</span></span></a>
         <nav class="main-nav" aria-label="ניווט ראשי">
           <button id="nav-week" class="nav-button active" type="button" aria-current="page">השבוע שלנו</button>
-          <button id="nav-admin" class="nav-button" type="button" hidden>דיקטטרורית</button>
+          <button id="nav-admin" class="nav-button" type="button" hidden>ניהול</button>
         </nav>
         <div class="account-menu"><span id="account-name" class="account-name"></span><button class="button text-button" id="open-password" type="button">סיסמה</button><button class="button text-button" id="logout" type="button">יציאה</button></div>
       </div>
@@ -113,7 +113,7 @@
       </section>
 
       <section id="admin-view" aria-labelledby="admin-title" hidden>
-        <div class="page-heading"><div><p class="eyebrow">ניהול החממה</p><h1 id="admin-title">דיקטטרורית</h1><p class="muted">אנשים, מקומות וכל מה שצריך בשביל שבוע טוב.</p></div><span class="role-pill">ניהול</span></div>
+        <div class="page-heading"><div><p class="eyebrow">ניהול החממה</p><h1 id="admin-title">ניהול</h1><p class="muted">אנשים, מקומות וכל מה שצריך בשביל שבוע טוב.</p></div><span class="role-pill">ניהול</span></div>
         <div class="admin-tabs" role="group" aria-label="תחומי ניהול"><button class="active" data-admin-tab="people" type="button" aria-pressed="true">משתמשים</button><button data-admin-tab="places" type="button" aria-pressed="false">חדרים ושולחנות</button><button data-admin-tab="schedule" type="button" aria-pressed="false">סגירת משמרות</button><button data-admin-tab="notices" type="button" aria-pressed="false">הודעות</button></div>
         <section id="admin-people" class="admin-panel" aria-labelledby="people-title">
           <div class="section-heading"><div><h2 id="people-title">האנשים שלנו</h2><p class="muted small">חשבונות אישיים והרשאות גישה.</p></div><button id="new-user" class="button primary" type="button">＋ משתמש חדש</button></div>
@@ -168,7 +168,7 @@
 
   <dialog id="user-dialog" aria-labelledby="user-title">
     <div class="dialog-heading"><h2 id="user-title">משתמש חדש</h2><button class="icon-button" type="button" data-close="user-dialog" aria-label="סגירה">×</button></div>
-    <form id="user-form"><label for="user-login">שם משתמש לכניסה</label><input id="user-login" name="login" dir="ltr" required maxlength="64" pattern="[a-z0-9_.\-]+" title="אותיות אנגליות קטנות, ספרות, נקודה, מקף או קו תחתון" autocomplete="off" spellcheck="false" autocapitalize="none"><label for="user-name">שם לתצוגה</label><input id="user-name" name="name" dir="auto" required maxlength="100"><label for="user-role">הרשאה</label><select id="user-role" name="role"><option value="member">משתתף / משתתפת</option><option value="admin">ניהול · דיקטטרורית</option></select><label id="user-active-label" class="checkbox-label" hidden><input id="user-active" name="active" type="checkbox">חשבון פעיל</label><p id="user-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">שמירה</button><button class="button subtle" type="button" data-close="user-dialog">חזרה</button><button id="reset-user-password" class="button danger-text" type="button" hidden>איפוס סיסמה</button></div></form>
+    <form id="user-form"><label for="user-login">שם משתמש לכניסה</label><input id="user-login" name="login" dir="ltr" required maxlength="64" pattern="[a-z0-9_.\-]+" title="אותיות אנגליות קטנות, ספרות, נקודה, מקף או קו תחתון" autocomplete="off" spellcheck="false" autocapitalize="none"><label for="user-name">שם לתצוגה</label><input id="user-name" name="name" dir="auto" required maxlength="100"><label for="user-role">הרשאה</label><select id="user-role" name="role"><option value="member">משתתף / משתתפת</option><option value="admin">ניהול</option></select><label id="user-active-label" class="checkbox-label" hidden><input id="user-active" name="active" type="checkbox">חשבון פעיל</label><p id="user-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">שמירה</button><button class="button subtle" type="button" data-close="user-dialog">חזרה</button><button id="reset-user-password" class="button danger-text" type="button" hidden>איפוס סיסמה</button></div></form>
   </dialog>
 
   <dialog id="credential-dialog" aria-labelledby="credential-title">
