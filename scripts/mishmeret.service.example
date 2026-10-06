@@ -1,0 +1,22 @@
+[Unit]
+Description=Mishmeret scheduling
+After=network.target
+
+[Service]
+Type=simple
+User=mishmeret
+Group=mishmeret
+WorkingDirectory=/opt/mishmeret
+EnvironmentFile=/etc/mishmeret.env
+ExecStart=/opt/mishmeret/scripts/manage.sh start
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/mishmeret
+
+[Install]
+WantedBy=multi-user.target

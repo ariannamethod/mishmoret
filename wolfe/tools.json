@@ -1,0 +1,167 @@
+{
+  "tools": [
+    {
+      "name": "propose_booking",
+      "description": "הרשמה למשמרת לימודים ביום ובשעות שנבחרו מהבית או במרכז",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "string",
+            "enum": [
+              "sunday",
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "today",
+              "tomorrow"
+            ],
+            "x-aliases": {
+              "sunday": [
+                "ראשון",
+                "יום ראשון",
+                "ביום ראשון",
+                "בראשון",
+                "לראשון"
+              ],
+              "monday": [
+                "שני",
+                "יום שני",
+                "ביום שני",
+                "בשני",
+                "לשני"
+              ],
+              "tuesday": [
+                "שלישי",
+                "יום שלישי",
+                "ביום שלישי",
+                "בשלישי",
+                "לשלישי"
+              ],
+              "wednesday": [
+                "רביעי",
+                "יום רביעי",
+                "ביום רביעי",
+                "ברביעי",
+                "לרביעי"
+              ],
+              "thursday": [
+                "חמישי",
+                "יום חמישי",
+                "ביום חמישי",
+                "בחמישי",
+                "לחמישי"
+              ],
+              "today": [
+                "היום",
+                "להיום"
+              ],
+              "tomorrow": [
+                "מחר",
+                "למחר"
+              ]
+            }
+          },
+          "period": {
+            "type": "string",
+            "enum": [
+              "morning",
+              "afternoon",
+              "full"
+            ],
+            "x-aliases": {
+              "morning": [
+                "בוקר",
+                "בבוקר",
+                "משמרת בוקר",
+                "למשמרת בוקר"
+              ],
+              "afternoon": [
+                "צהריים",
+                "בצהריים",
+                "אחר הצהריים",
+                "אחרי הצהריים",
+                "משמרת צהריים"
+              ],
+              "full": [
+                "מלאה",
+                "מלא",
+                "כל היום",
+                "לכל היום",
+                "יום מלא",
+                "משמרת מלאה"
+              ]
+            }
+          },
+          "location": {
+            "type": "string",
+            "enum": [
+              "home",
+              "center"
+            ],
+            "x-aliases": {
+              "home": [
+                "מהבית",
+                "בבית",
+                "מרחוק"
+              ],
+              "center": [
+                "במרכז",
+                "למרכז",
+                "בכיתה",
+                "בחממה",
+                "מהחממה"
+              ]
+            }
+          },
+          "week": {
+            "type": "string",
+            "enum": [
+              "selected",
+              "next"
+            ],
+            "x-aliases": {
+              "selected": [
+                "השבוע",
+                "השבוע הנבחר"
+              ],
+              "next": [
+                "שבוע הבא",
+                "בשבוע הבא",
+                "לשבוע הבא"
+              ]
+            },
+            "default": "selected"
+          }
+        },
+        "required": [
+          "day",
+          "period",
+          "location"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "show_schedule",
+      "description": "הצגת לוח המשמרות ומי מגיע ללימודים",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "show_my_bookings",
+      "description": "הצגת ההרשמות והמשמרות שלי",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

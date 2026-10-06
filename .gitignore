@@ -1,0 +1,13 @@
+/build/
+/data/
+/backups/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite*
+.DS_Store
+__pycache__/
+*.log
+*.pid
+initial-accounts.json
+.env

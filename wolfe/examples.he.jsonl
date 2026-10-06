@@ -1,0 +1,157 @@
+{"text":"תרשום אותי ביום ראשון בבוקר מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"home"}}
+{"text":"תרשמי אותי ביום ראשון בצהריים במרכז","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"center"}}
+{"text":"אני רוצה להירשם ביום ראשון לכל היום מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"home"}}
+{"text":"תרשמי אותי ביום שני בבוקר במרכז","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"center"}}
+{"text":"אני רוצה להירשם ביום שני בצהריים מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"home"}}
+{"text":"אפשר להירשם ביום שני לכל היום במרכז","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"center"}}
+{"text":"אני רוצה להירשם ביום שלישי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"home"}}
+{"text":"אפשר להירשם ביום שלישי בצהריים במרכז","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"center"}}
+{"text":"בבקשה רשמו אותי ביום שלישי לכל היום מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"home"}}
+{"text":"אפשר להירשם ביום רביעי בבוקר במרכז","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"בבקשה רשמו אותי ביום רביעי בצהריים מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"home"}}
+{"text":"שבצו אותי ביום רביעי לכל היום במרכז","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"center"}}
+{"text":"בבקשה רשמו אותי ביום חמישי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"home"}}
+{"text":"שבצו אותי ביום חמישי בצהריים במרכז","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"center"}}
+{"text":"הרשמה ביום חמישי לכל היום מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"home"}}
+{"text":"שבצו אותי היום בבוקר במרכז","tool":"propose_booking","arguments":{"day":"today","period":"morning","location":"center"}}
+{"text":"הרשמה היום בצהריים מהבית","tool":"propose_booking","arguments":{"day":"today","period":"afternoon","location":"home"}}
+{"text":"תרשום אותי היום לכל היום במרכז","tool":"propose_booking","arguments":{"day":"today","period":"full","location":"center"}}
+{"text":"הרשמה מחר בבוקר מהבית","tool":"propose_booking","arguments":{"day":"tomorrow","period":"morning","location":"home"}}
+{"text":"תרשום אותי מחר בצהריים במרכז","tool":"propose_booking","arguments":{"day":"tomorrow","period":"afternoon","location":"center"}}
+{"text":"תרשמי אותי מחר לכל היום מהבית","tool":"propose_booking","arguments":{"day":"tomorrow","period":"full","location":"home"}}
+{"text":"תרשום אותי ביום שלישי בבוקר מהבית בשבוע הבא","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"home","week":"next"}}
+{"text":"אני רוצה להירשם ביום ראשון לכל היום במרכז בשבוע הבא","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"center","week":"next"}}
+{"text":"אפשר להירשם ביום חמישי בצהריים מהבית בשבוע הבא","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"home","week":"next"}}
+{"text":"תראה לי את לוח המשמרות","tool":"show_schedule","arguments":{}}
+{"text":"תראי לי את לוח המשמרות","tool":"show_schedule","arguments":{}}
+{"text":"הצג את לוח המשמרות","tool":"show_schedule","arguments":{}}
+{"text":"מי מגיע ללימודים","tool":"show_schedule","arguments":{}}
+{"text":"מי מגיע השבוע","tool":"show_schedule","arguments":{}}
+{"text":"מי איתי במשמרת","tool":"show_schedule","arguments":{}}
+{"text":"אפשר לראות את לוח המשמרות","tool":"show_schedule","arguments":{}}
+{"text":"מה לוח המשמרות השבוע","tool":"show_schedule","arguments":{}}
+{"text":"הצגת לוח המשמרות","tool":"show_schedule","arguments":{}}
+{"text":"תראה מי מגיע השבוע","tool":"show_schedule","arguments":{}}
+{"text":"תראה לי את המשמרות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"תראי לי את המשמרות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"הצג את ההרשמות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"מתי אני רשום","tool":"show_my_bookings","arguments":{}}
+{"text":"מתי אני רשומה","tool":"show_my_bookings","arguments":{}}
+{"text":"לאילו משמרות נרשמתי","tool":"show_my_bookings","arguments":{}}
+{"text":"אפשר לראות את ההרשמות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"מה המשמרות שלי השבוע","tool":"show_my_bookings","arguments":{}}
+{"text":"ההרשמות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"תראה לי מתי נרשמתי","tool":"show_my_bookings","arguments":{}}
+{"text":"שלום","tool":null,"arguments":{}}
+{"text":"תודה","tool":null,"arguments":{}}
+{"text":"מה נשמע","tool":null,"arguments":{}}
+{"text":"איך מזג האוויר","tool":null,"arguments":{}}
+{"text":"תנגן מוזיקה","tool":null,"arguments":{}}
+{"text":"אני אוהב ללמוד בבית","tool":null,"arguments":{}}
+{"text":"יש לי פגישה ביום שלישי","tool":null,"arguments":{}}
+{"text":"אולי אלמד מחר","tool":null,"arguments":{}}
+{"text":"חשבתי להגיע למרכז","tool":null,"arguments":{}}
+{"text":"בדרך כלל אני לומד ביום שלישי בבוקר מהבית","tool":null,"arguments":{}}
+{"text":"אל תרשום אותי ביום שלישי בבוקר מהבית","tool":null,"arguments":{}}
+{"text":"אל תרשמי אותי מחר בצהריים במרכז","tool":null,"arguments":{}}
+{"text":"לא רוצה להירשם ביום ראשון בבוקר מהבית","tool":null,"arguments":{}}
+{"text":"אני לא רוצה להירשם ביום שני לכל היום במרכז","tool":null,"arguments":{}}
+{"text":"לא לרשום אותי ביום רביעי בבוקר מהבית","tool":null,"arguments":{}}
+{"text":"אל תשבצו אותי ביום חמישי בצהריים במרכז","tool":null,"arguments":{}}
+{"text":"אני לא מגיע היום בבוקר למרכז","tool":null,"arguments":{}}
+{"text":"לא תרשום אותי ביום שלישי בבוקר מהבית","tool":null,"arguments":{}}
+{"text":"אין צורך לרשום אותי מחר לכל היום מהבית","tool":null,"arguments":{}}
+{"text":"תבטל לי את המשמרת","tool":null,"arguments":{}}
+{"text":"מחק את כל ההרשמות","tool":null,"arguments":{}}
+{"text":"תוסיף מנהל חדש","tool":null,"arguments":{}}
+{"text":"אל תראה לי את לוח המשמרות","tool":null,"arguments":{}}
+{"text":"אל תראי לי את המשמרות שלי","tool":null,"arguments":{}}
+{"text":"אני לא רוצה לראות את ההרשמות שלי","tool":null,"arguments":{}}
+{"text":"אני כבר רשום ביום שלישי בבוקר מהבית","tool":null,"arguments":{}}
+{"text":"הוא נרשם ביום שני בצהריים במרכז","tool":null,"arguments":{}}
+{"text":"אתמול נרשמתי לבוקר במרכז","tool":null,"arguments":{}}
+{"text":"אני לומד מהבית ביום רביעי בבוקר","tool":null,"arguments":{}}
+{"text":"בדרך כלל אני במרכז ביום חמישי","tool":null,"arguments":{}}
+{"text":"תרשמי אותי בראשון בבוקר במרכז","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"center"}}
+{"text":"תרשום אותי בשני בצהריים מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"home"}}
+{"text":"תרשמי אותי ברביעי בבוקר בכיתה","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"תרשום אותי בחמישי לכל היום מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"home"}}
+{"text":"בבקשה שבצו אותי בשלישי במשמרת מלאה בחממה","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"center"}}
+{"text":"אני רוצה להירשם לשני אחר הצהריים מרחוק","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"home"}}
+{"text":"רשמי אותי ביום רביעי בבוקר במרכז","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"רשום אותי מחר בצהריים בכיתה","tool":"propose_booking","arguments":{"day":"tomorrow","period":"afternoon","location":"center"}}
+{"text":"תציגי את המשמרות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"תציג את ההרשמות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"אני רוצה לראות את המשמרות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"אפשר לראות מתי אני רשום","tool":"show_my_bookings","arguments":{}}
+{"text":"תראה את השיבוצים שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"מתי נרשמתי למשמרת","tool":"show_my_bookings","arguments":{}}
+{"text":"תציג את לוח המשמרות","tool":"show_schedule","arguments":{}}
+{"text":"תציגי מי מגיע ללימודים","tool":"show_schedule","arguments":{}}
+{"text":"אני רוצה לראות מי מגיע ללימודים","tool":"show_schedule","arguments":{}}
+{"text":"תראה את מערכת השעות","tool":"show_schedule","arguments":{}}
+{"text":"תרשמי אותי בשלישי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"home"}}
+{"text":"תרשום אותי ברביעי בצהריים בכיתה","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"center"}}
+{"text":"רשמו אותי לראשון במשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"center"}}
+{"text":"בבקשה תרשמי אותי בחמישי בבוקר בבית","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"home"}}
+{"text":"אפשר לראות את המשמרות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"בבקשה הציגו את ההרשמות שלי","tool":"show_my_bookings","arguments":{}}
+{"text":"בבקשה תרשמי אותי ליום ראשון בבוקר מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"home"}}
+{"text":"רשמו אותי בבקשה מהבית ביום ראשון בבוקר","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"home"}}
+{"text":"תרשום אותי בבקשה במרכז ביום ראשון בבוקר","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"center"}}
+{"text":"תרשמי אותי בבקשה ליום ראשון בבוקר במרכז","tool":"propose_booking","arguments":{"day":"sunday","period":"morning","location":"center"}}
+{"text":"תרשום אותי בבקשה מהבית ביום ראשון אחרי הצהריים","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"home"}}
+{"text":"תרשמי אותי בבקשה ליום ראשון אחרי הצהריים מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"home"}}
+{"text":"אני רוצה להירשם ביום ראשון אחרי הצהריים במרכז","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"center"}}
+{"text":"בבקשה רשום אותי ביום ראשון אחרי הצהריים במרכז","tool":"propose_booking","arguments":{"day":"sunday","period":"afternoon","location":"center"}}
+{"text":"אני רוצה להירשם ביום ראשון למשמרת מלאה מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"home"}}
+{"text":"בבקשה רשום אותי ביום ראשון למשמרת מלאה מהבית","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"home"}}
+{"text":"רשמו אותי בבקשה במרכז ביום ראשון למשמרת מלאה","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"center"}}
+{"text":"בבקשה תרשמי אותי ליום ראשון למשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"sunday","period":"full","location":"center"}}
+{"text":"תרשום אותי בבקשה מהבית ביום שני בבוקר","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"home"}}
+{"text":"תרשמי אותי בבקשה ליום שני בבוקר מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"home"}}
+{"text":"אני רוצה להירשם ביום שני בבוקר במרכז","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"center"}}
+{"text":"בבקשה רשום אותי ביום שני בבוקר במרכז","tool":"propose_booking","arguments":{"day":"monday","period":"morning","location":"center"}}
+{"text":"אני רוצה להירשם ביום שני אחרי הצהריים מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"home"}}
+{"text":"בבקשה רשום אותי ביום שני אחרי הצהריים מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"home"}}
+{"text":"רשמו אותי בבקשה במרכז ביום שני אחרי הצהריים","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"center"}}
+{"text":"בבקשה תרשמי אותי ליום שני אחרי הצהריים במרכז","tool":"propose_booking","arguments":{"day":"monday","period":"afternoon","location":"center"}}
+{"text":"רשמו אותי בבקשה מהבית ביום שני למשמרת מלאה","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"home"}}
+{"text":"בבקשה תרשמי אותי ליום שני למשמרת מלאה מהבית","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"home"}}
+{"text":"תרשמי אותי בבקשה ליום שני למשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"center"}}
+{"text":"תרשום אותי בבקשה במרכז ביום שני למשמרת מלאה","tool":"propose_booking","arguments":{"day":"monday","period":"full","location":"center"}}
+{"text":"בבקשה רשום אותי ביום שלישי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"home"}}
+{"text":"רשמו אותי בבקשה במרכז ביום שלישי בבוקר","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"center"}}
+{"text":"בבקשה תרשמי אותי ליום שלישי בבוקר במרכז","tool":"propose_booking","arguments":{"day":"tuesday","period":"morning","location":"center"}}
+{"text":"רשמו אותי בבקשה מהבית ביום שלישי אחרי הצהריים","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"home"}}
+{"text":"בבקשה תרשמי אותי ליום שלישי אחרי הצהריים מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"home"}}
+{"text":"תרשמי אותי בבקשה ליום שלישי אחרי הצהריים במרכז","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"center"}}
+{"text":"תרשום אותי בבקשה במרכז ביום שלישי אחרי הצהריים","tool":"propose_booking","arguments":{"day":"tuesday","period":"afternoon","location":"center"}}
+{"text":"תרשמי אותי בבקשה ליום שלישי למשמרת מלאה מהבית","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"home"}}
+{"text":"תרשום אותי בבקשה מהבית ביום שלישי למשמרת מלאה","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"home"}}
+{"text":"בבקשה רשום אותי ביום שלישי למשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"center"}}
+{"text":"אני רוצה להירשם ביום שלישי למשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"tuesday","period":"full","location":"center"}}
+{"text":"רשמו אותי בבקשה מהבית ביום רביעי בבוקר","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"home"}}
+{"text":"בבקשה תרשמי אותי ליום רביעי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"home"}}
+{"text":"תרשמי אותי בבקשה ליום רביעי בבוקר במרכז","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"תרשום אותי בבקשה במרכז ביום רביעי בבוקר","tool":"propose_booking","arguments":{"day":"wednesday","period":"morning","location":"center"}}
+{"text":"תרשמי אותי בבקשה ליום רביעי אחרי הצהריים מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"home"}}
+{"text":"תרשום אותי בבקשה מהבית ביום רביעי אחרי הצהריים","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"home"}}
+{"text":"בבקשה רשום אותי ביום רביעי אחרי הצהריים במרכז","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"center"}}
+{"text":"אני רוצה להירשם ביום רביעי אחרי הצהריים במרכז","tool":"propose_booking","arguments":{"day":"wednesday","period":"afternoon","location":"center"}}
+{"text":"בבקשה רשום אותי ביום רביעי למשמרת מלאה מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"home"}}
+{"text":"אני רוצה להירשם ביום רביעי למשמרת מלאה מהבית","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"home"}}
+{"text":"בבקשה תרשמי אותי ליום רביעי למשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"center"}}
+{"text":"רשמו אותי בבקשה במרכז ביום רביעי למשמרת מלאה","tool":"propose_booking","arguments":{"day":"wednesday","period":"full","location":"center"}}
+{"text":"תרשמי אותי בבקשה ליום חמישי בבוקר מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"home"}}
+{"text":"תרשום אותי בבקשה מהבית ביום חמישי בבוקר","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"home"}}
+{"text":"בבקשה רשום אותי ביום חמישי בבוקר במרכז","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"center"}}
+{"text":"אני רוצה להירשם ביום חמישי בבוקר במרכז","tool":"propose_booking","arguments":{"day":"thursday","period":"morning","location":"center"}}
+{"text":"בבקשה רשום אותי ביום חמישי אחרי הצהריים מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"home"}}
+{"text":"אני רוצה להירשם ביום חמישי אחרי הצהריים מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"home"}}
+{"text":"בבקשה תרשמי אותי ליום חמישי אחרי הצהריים במרכז","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"center"}}
+{"text":"רשמו אותי בבקשה במרכז ביום חמישי אחרי הצהריים","tool":"propose_booking","arguments":{"day":"thursday","period":"afternoon","location":"center"}}
+{"text":"בבקשה תרשמי אותי ליום חמישי למשמרת מלאה מהבית","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"home"}}
+{"text":"רשמו אותי בבקשה מהבית ביום חמישי למשמרת מלאה","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"home"}}
+{"text":"תרשום אותי בבקשה במרכז ביום חמישי למשמרת מלאה","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"center"}}
+{"text":"תרשמי אותי בבקשה ליום חמישי למשמרת מלאה במרכז","tool":"propose_booking","arguments":{"day":"thursday","period":"full","location":"center"}}
