@@ -13,24 +13,24 @@ export MISHMERET_ORIGIN=https://YOUR-HOST.YOUR-TAILNET.ts.net
 ./scripts/manage.sh start
 ```
 
-מחליפים את כתובת הדוגמה בכתובת האמיתית. `MISHMERET_ORIGIN` היא הכתובת המדויקת שפותחים בדפדפן, ללא `/` בסוף. אחרי שינוי כתובת מפעילים מחדש. בהפעלה מקומית הכתובת היא `http://127.0.0.1:8080`. השרת מקבל חיבורים ב־`127.0.0.1`; Tailscale מעביר אליו את הגישה מבחוץ דרך HTTPS.
+מחליפים את כתובת הדוגמה בכתובת האמיתית. `MISHMERET_ORIGIN` היא הכתובת המדויקת שפותחים בדפדפן, ללא `/` בסוף. אחרי שינוי כתובת מפעילים מחדש. בהפעלה מקומית הכתובת היא `http://127.0.0.1:8080`. השרת מקבל חיבורים ב־`127.0.0.1`; Tailscale מעביר אליו את הגישה מהרשת הלימודית דרך HTTPS.
 
-## קישור למשתתפים
+## גישה ברשת הלימודית
 
-Tailscale מותקן במחשב השרת. כדי שהמשתתפים יוכלו להיכנס בקישור רגיל, מפעילים עליו Funnel:
-
-```sh
-tailscale funnel --bg 8080
-tailscale funnel status
-```
-
-מעתיקים את כתובת ה־HTTPS מהפלט אל `MISHMERET_ORIGIN` ומפעילים מחדש את האפליקציה. המשתתפים פותחים את הקישור ונכנסים לחשבון שלהם; אין צורך להתקין אצלם Tailscale. לכיבוי הגישה הזאת:
+מחברים את השרת ואת המכשירים של ארבעת חברי הצוות לרשת Tailscale לימודית נפרדת וסגורה (tailnet). כל אחד מפעיל Tailscale במחשב או בטלפון שממנו הוא נכנס. בשרת מפעילים Serve כדי לשתף את האפליקציה בתוך הרשת הזאת:
 
 ```sh
-tailscale funnel --https=443 off
+tailscale serve --bg 8080
+tailscale serve status
 ```
 
-לניסוי בתוך רשת Tailscale סגורה אפשר להשתמש ב־`tailscale serve --bg 8080` במקום Funnel. באפשרות הזאת גם המכשירים של המשתתפים צריכים להיות מחוברים ל־Tailscale. הפעלת השיתוף היא צעד ידני של צוות התחזוקה. [מדריך Funnel](https://tailscale.com/docs/reference/tailscale-cli/funnel) · [מדריך Serve](https://tailscale.com/docs/reference/tailscale-cli/serve).
+מעתיקים את כתובת ה־HTTPS מהפלט אל `MISHMERET_ORIGIN` ומפעילים מחדש את האפליקציה. כשהמשתתפים מחוברים לרשת הלימודית, הם פותחים את הקישור בדפדפן ונכנסים לחשבון שלהם. לכיבוי השיתוף:
+
+```sh
+tailscale serve --https=443 off
+```
+
+אם בהמשך מחליטים לאפשר כניסה בלי Tailscale, אפשר להפעיל `tailscale funnel --bg 8080`: Funnel מפרסם את כתובת האפליקציה באינטרנט, והכניסה נשארת דרך חשבון האפליקציה. זאת אפשרות נפרדת שמפעילים ידנית; לכיבויה מריצים `tailscale funnel --https=443 off`. [מדריך Serve](https://tailscale.com/docs/reference/tailscale-cli/serve) · [מדריך Funnel](https://tailscale.com/docs/reference/tailscale-cli/funnel).
 
 ## גיבוי ושחזור
 

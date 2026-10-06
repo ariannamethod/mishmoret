@@ -1,3 +1,6 @@
+#if defined(__APPLE__) && !defined(_DARWIN_C_SOURCE)
+#define _DARWIN_C_SOURCE 1
+#endif
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE 700
 #endif
@@ -111,8 +114,8 @@ static int valid_db(sqlite3 *db) {
     if (!valid)
         return 0;
     const char *queries[] = {
-        "SELECT id,login,name,role,active,password,must_change,fail_count,fail_since FROM users "
-        "LIMIT 0",
+        ("SELECT id,login,name,role,active,password,must_change,fail_count,fail_since FROM users "
+         "LIMIT 0"),
         "SELECT hash,user_id,csrf,expires FROM sessions LIMIT 0",
         "SELECT id,user_id,date,mask,location,resource_id FROM bookings LIMIT 0",
         "SELECT id,name,room,kind,active FROM resources LIMIT 0",

@@ -652,8 +652,8 @@ static Result week(App *a, struct MHD_Connection *c) {
         "SELECT id,date,CASE mask WHEN 1 THEN 'morning' WHEN 2 THEN 'afternoon' ELSE 'full' END AS "
         "period,location,reason FROM closures WHERE date>=? AND date<=date(?,'+6 days') ORDER BY "
         "date,id",
-        "SELECT id,date,end_date,title,body FROM announcements WHERE end_date>=? AND "
-        "date<=date(?,'+6 days') ORDER BY date,id",
+        ("SELECT id,date,end_date,title,body FROM announcements WHERE end_date>=? AND "
+         "date<=date(?,'+6 days') ORDER BY date,id"),
         "SELECT id,name,room,kind,active FROM resources ORDER BY room,id"};
     const char *keys[] = {"bookings", "closures", "announcements", "resources"};
     for (int i = 0; i < 4; i++) {
