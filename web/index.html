@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#143b3b">
+  <title>משמרת · באר שבע</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">מעבר לתוכן</a>
+  <div id="status" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="initial-loading" class="loading-page" role="status">טוענים את משמרת…</div>
+
+  <main id="auth-screen" class="auth-layout" hidden>
+    <section class="auth-intro">
+      <span class="brand-mark" aria-hidden="true">מ</span>
+      <p class="eyebrow">באר שבע · לומדים יחד</p>
+      <h1>משמרת.</h1>
+      <p class="auth-description">השבוע שלך,<br>במקום אחד.</p>
+      <p class="muted">במרכז או מהבית — נפגשים בלמידה.</p>
+    </section>
+    <section class="auth-card" aria-labelledby="auth-title">
+      <p class="eyebrow">טוב לראות אותך</p>
+      <h2 id="auth-title">נכנסים לשבוע חדש</h2>
+      <form id="login-form">
+        <label for="login">שם משתמש</label>
+        <input id="login" name="login" autocomplete="username" dir="ltr" required maxlength="64" spellcheck="false" autocapitalize="none">
+        <label for="login-password">סיסמה</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="128">
+        <p id="login-error" class="form-error" role="alert" hidden></p>
+        <button class="button primary wide" type="submit">כניסה <span aria-hidden="true">←</span></button>
+      </form>
+      <p class="small muted auth-note">אין לך חשבון? אפשר לפנות לצוות המרכז.</p>
+    </section>
+  </main>
+
+  <main id="first-password-screen" class="compact-page" hidden>
+    <section class="auth-card" aria-labelledby="first-password-title">
+      <span class="brand-mark small-mark" aria-hidden="true">מ</span>
+      <p class="eyebrow">כניסה ראשונה</p>
+      <h1 id="first-password-title">בוחרים סיסמה אישית</h1>
+      <p class="muted">מחליפים את הסיסמה הזמנית שקיבלת לפני שממשיכים.</p>
+      <form id="first-password-form">
+        <label for="first-old-password">הסיסמה הזמנית</label>
+        <input id="first-old-password" name="old_password" type="password" autocomplete="current-password" required maxlength="128">
+        <label for="first-new-password">סיסמה חדשה</label>
+        <input id="first-new-password" name="new_password" type="password" autocomplete="new-password" required maxlength="128" aria-describedby="first-password-help">
+        <p id="first-password-help" class="field-help">לפחות 12 תווים. אפשר לבחור משפט שקל לך לזכור.</p>
+        <label for="first-confirm-password">שוב הסיסמה החדשה</label>
+        <input id="first-confirm-password" name="confirm_password" type="password" autocomplete="new-password" required maxlength="128">
+        <p id="first-password-error" class="form-error" role="alert" hidden></p>
+        <button class="button primary wide" type="submit">שמירה והמשך</button>
+      </form>
+      <button class="button text-button wide" id="first-logout" type="button">יציאה מהחשבון</button>
+    </section>
+  </main>
+
+  <div id="app-screen" hidden>
+    <header class="app-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="משמרת — דף הבית"><span class="brand-mark" aria-hidden="true">מ</span><span>משמרת<span class="brand-subtitle">באר שבע</span></span></a>
+        <nav class="main-nav" aria-label="ניווט ראשי">
+          <button id="nav-week" class="nav-button active" type="button" aria-current="page">השבוע שלנו</button>
+          <button id="nav-admin" class="nav-button" type="button" hidden>דיקטטור</button>
+        </nav>
+        <div class="account-menu"><span id="account-name" class="account-name"></span><button class="button text-button" id="open-password" type="button">סיסמה</button><button class="button text-button" id="logout" type="button">יציאה</button></div>
+      </div>
+    </header>
+    <main id="main-content" class="workspace" tabindex="-1">
+      <p id="page-error" class="page-error" role="alert" hidden></p>
+      <section id="week-view" aria-labelledby="week-title">
+        <div class="page-heading">
+          <div><p class="eyebrow">מרחב ללמידה, בקצב שלך</p><h1 id="week-title">השבוע שלנו</h1><p class="muted">בוחרים מתי מגיעים, ורואים את מי פוגשים.</p></div>
+          <button id="new-booking" class="button primary" type="button"><span aria-hidden="true">＋</span> הרשמה למשמרת</button>
+        </div>
+        <div id="announcement-list" class="announcements" aria-label="עדכונים מהמרכז"></div>
+        <section class="calendar-panel" aria-label="לוח משמרות שבועי">
+          <div class="calendar-toolbar">
+            <div class="week-navigation"><button id="previous-week" class="icon-button" type="button" aria-label="שבוע קודם">→</button><h2 id="week-range" aria-live="polite"></h2><button id="next-week" class="icon-button" type="button" aria-label="שבוע הבא">←</button><button id="current-week" class="button subtle small-button" type="button">השבוע</button></div>
+            <div class="view-toggle" role="group" aria-label="תצוגת משמרות"><button id="filter-all" class="selected" type="button" aria-pressed="true">כולם</button><button id="filter-mine" type="button" aria-pressed="false">המשמרות שלי</button></div>
+          </div>
+          <p id="week-loading" class="calendar-loading" role="status" hidden>טוענים את השבוע…</p>
+          <div id="calendar" class="calendar-grid"></div>
+          <div class="calendar-footer"><span><i class="legend-dot center-dot" aria-hidden="true"></i> במרכז</span><span><i class="legend-dot home-dot" aria-hidden="true"></i> מהבית</span><span><i class="legend-dot closed-dot" aria-hidden="true"></i> סגור</span><span id="week-summary" class="week-summary"></span></div>
+        </section>
+        <p class="page-footnote">אפשר לעדכן את הבחירה שלך בכל עת. סגירת משמרת מופיעה בלוח לצד ההרשמה.</p>
+      </section>
+
+      <section id="admin-view" aria-labelledby="admin-title" hidden>
+        <div class="page-heading"><div><p class="eyebrow">ניהול המרכז</p><h1 id="admin-title">דיקטטור</h1><p class="muted">אנשים, מקומות וכל מה שצריך בשביל שבוע טוב.</p></div><span class="role-pill">ניהול</span></div>
+        <div class="admin-tabs" role="group" aria-label="תחומי ניהול"><button class="active" data-admin-tab="people" type="button" aria-pressed="true">משתמשים</button><button data-admin-tab="places" type="button" aria-pressed="false">חדרים ושולחנות</button><button data-admin-tab="schedule" type="button" aria-pressed="false">סגירת משמרות</button><button data-admin-tab="notices" type="button" aria-pressed="false">הודעות</button></div>
+        <section id="admin-people" class="admin-panel" aria-labelledby="people-title">
+          <div class="section-heading"><div><h2 id="people-title">האנשים שלנו</h2><p class="muted small">חשבונות אישיים והרשאות גישה.</p></div><button id="new-user" class="button primary" type="button">＋ משתמש חדש</button></div>
+          <div id="users-list" class="admin-list"></div>
+        </section>
+        <section id="admin-places" class="admin-panel" aria-labelledby="places-title" hidden>
+          <div class="section-heading"><div><h2 id="places-title">מקום ללמוד</h2><p class="muted small">הזמנת חדר שלם שומרת גם את השולחנות שבתוכו.</p></div><button id="new-resource" class="button primary" type="button">＋ מקום חדש</button></div>
+          <div id="resources-list" class="admin-list"></div>
+        </section>
+        <section id="admin-schedule" class="admin-panel" aria-labelledby="closures-title" hidden>
+          <div class="section-heading"><div><h2 id="closures-title">סגירת משמרות</h2><p class="muted small">אפשר לסגור יום, חלק מיום או מקום השתתפות. פתיחה מחדש מחזירה את ההרשמות הקיימות.</p></div><button id="new-closure" class="button primary" type="button">＋ סגירת משמרת</button></div>
+          <p id="closures-range" class="list-caption"></p><div id="closures-list" class="admin-list"></div>
+        </section>
+        <section id="admin-notices" class="admin-panel" aria-labelledby="notices-title" hidden>
+          <div class="section-heading"><div><h2 id="notices-title">עדכונים מהמרכז</h2><p class="muted small">הודעות מופיעות בשבועות הרלוונטיים.</p></div><button id="new-announcement" class="button primary" type="button">＋ הודעה חדשה</button></div>
+          <p id="notices-range" class="list-caption"></p><div id="notices-list" class="admin-list"></div>
+        </section>
+      </section>
+    </main>
+    <footer class="site-footer"><span>משמרת · באר שבע</span><span>לומדים יחד, במרכז ומהבית.</span></footer>
+    <button id="wolfe-toggle" class="wolfe-launcher" type="button" aria-expanded="false" aria-controls="wolfe-chat"><span aria-hidden="true">💬</span> דברו עם איציק</button>
+    <section id="wolfe-chat" class="wolfe-chat" role="dialog" aria-modal="false" aria-labelledby="wolfe-title" hidden>
+      <div class="wolfe-chat-heading"><div><h2 id="wolfe-title">איציק</h2><p>מתכננים את השבוע יחד</p></div><button id="wolfe-close" class="icon-button" type="button" aria-label="סגירת השיחה עם איציק">×</button></div>
+      <div id="wolfe-history" class="wolfe-history" role="log" aria-live="polite" aria-relevant="additions text" tabindex="0" aria-label="השיחה עם איציק"></div>
+      <form id="wolfe-form" class="wolfe-composer">
+        <label for="wolfe-text">מה התוכנית שלך?</label>
+        <div class="wolfe-controls"><input id="wolfe-text" name="text" type="text" dir="auto" required maxlength="512" autocomplete="off" aria-describedby="wolfe-help" placeholder="תרשמי אותי ליום שלישי בבוקר מהבית"><button id="wolfe-submit" class="button primary" type="submit" aria-label="שליחת הודעה ל-איציק">שליחה</button></div>
+        <p id="wolfe-help" class="field-help">להרשמה, כותבים בכל בקשה יום, זמן ומקום. ההצעה תיפתח לאישור שלך.</p>
+        <p id="wolfe-result" class="wolfe-result" role="status" aria-live="polite" hidden></p>
+        <p id="wolfe-error" class="form-error" role="alert" hidden></p>
+      </form>
+    </section>
+  </div>
+
+  <dialog id="booking-dialog" aria-labelledby="booking-title">
+    <div class="dialog-heading"><div><p class="eyebrow">התוכנית שלך</p><h2 id="booking-title">הרשמה למשמרת</h2></div><button class="icon-button" type="button" data-close="booking-dialog" aria-label="סגירה">×</button></div>
+    <form id="booking-form">
+      <p id="wolfe-booking-summary" class="info-note" aria-live="polite" hidden></p>
+      <label for="booking-date">באיזה יום?</label><input id="booking-date" name="date" type="date" required>
+      <div class="form-columns"><div><label for="booking-period">מתי?</label><select id="booking-period" name="period"><option value="morning">בוקר</option><option value="afternoon">אחר הצהריים</option><option value="full">יום מלא</option></select></div><div><label for="booking-location">מאיפה?</label><select id="booking-location" name="location"><option value="center">מהמרכז</option><option value="home">מהבית</option></select></div></div>
+      <div id="booking-resource-field"><label for="booking-resource">חדר או שולחן <span class="muted">· לבחירתך</span></label><select id="booking-resource" name="resource_id"><option value="">ללא מקום קבוע</option></select><p class="field-help">הזמינות נבדקת בעת השמירה.</p></div>
+      <p id="booking-existing" class="info-note" hidden>שמירה תעדכן את ההרשמה הקיימת שלך ביום הזה.</p>
+      <p id="booking-error" class="form-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button class="button primary" type="submit">שמירת משמרת</button><button class="button subtle" type="button" data-close="booking-dialog">חזרה</button><button id="cancel-own-booking" class="button danger-text" type="button" hidden>ביטול הרשמה</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="password-dialog" aria-labelledby="password-title">
+    <div class="dialog-heading"><h2 id="password-title">החלפת סיסמה</h2><button class="icon-button" type="button" data-close="password-dialog" aria-label="סגירה">×</button></div>
+    <form id="password-form"><label for="old-password">סיסמה נוכחית</label><input id="old-password" name="old_password" type="password" autocomplete="current-password" required maxlength="128"><label for="new-password">סיסמה חדשה</label><input id="new-password" name="new_password" type="password" autocomplete="new-password" required maxlength="128" aria-describedby="password-help"><p id="password-help" class="field-help">לפחות 12 תווים. אפשר לבחור משפט שקל לך לזכור.</p><label for="confirm-password">שוב הסיסמה החדשה</label><input id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" required maxlength="128"><p id="password-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">עדכון סיסמה</button><button class="button subtle" type="button" data-close="password-dialog">חזרה</button></div></form>
+  </dialog>
+
+  <dialog id="user-dialog" aria-labelledby="user-title">
+    <div class="dialog-heading"><h2 id="user-title">משתמש חדש</h2><button class="icon-button" type="button" data-close="user-dialog" aria-label="סגירה">×</button></div>
+    <form id="user-form"><label for="user-login">שם משתמש לכניסה</label><input id="user-login" name="login" dir="ltr" required maxlength="64" pattern="[a-z0-9_.\-]+" title="אותיות אנגליות קטנות, ספרות, נקודה, מקף או קו תחתון" autocomplete="off" spellcheck="false" autocapitalize="none"><label for="user-name">שם לתצוגה</label><input id="user-name" name="name" dir="auto" required maxlength="100"><label for="user-role">הרשאה</label><select id="user-role" name="role"><option value="member">משתתף / משתתפת</option><option value="admin">ניהול · דיקטטור</option></select><label id="user-active-label" class="checkbox-label" hidden><input id="user-active" name="active" type="checkbox">חשבון פעיל</label><p id="user-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">שמירה</button><button class="button subtle" type="button" data-close="user-dialog">חזרה</button><button id="reset-user-password" class="button danger-text" type="button" hidden>איפוס סיסמה</button></div></form>
+  </dialog>
+
+  <dialog id="credential-dialog" aria-labelledby="credential-title">
+    <div class="dialog-heading"><h2 id="credential-title">סיסמה זמנית</h2><button class="icon-button" type="button" data-close="credential-dialog" aria-label="סגירה">×</button></div>
+    <p>הסיסמה מוצגת פעם אחת. יש להעביר אותה לבעל החשבון, שיבחר סיסמה אישית בכניסה הבאה.</p><p id="credential-user" class="credential-user"></p><label for="temporary-password">הסיסמה החדשה</label><input id="temporary-password" class="credential-value" type="text" dir="ltr" readonly autocomplete="off"><p id="credential-copy-status" class="field-help" role="status"></p><div class="dialog-actions"><button id="copy-credential" class="button primary" type="button">העתקת סיסמה</button><button class="button subtle" type="button" data-close="credential-dialog">סיום</button></div>
+  </dialog>
+
+  <dialog id="resource-dialog" aria-labelledby="resource-title">
+    <div class="dialog-heading"><h2 id="resource-title">מקום חדש</h2><button class="icon-button" type="button" data-close="resource-dialog" aria-label="סגירה">×</button></div>
+    <form id="resource-form"><label for="resource-name">שם המקום</label><input id="resource-name" name="name" required maxlength="100" dir="auto" placeholder="למשל, שולחן ליד החלון"><label for="resource-room">שם החדר</label><input id="resource-room" name="room" required maxlength="100" dir="auto" placeholder="למשל, חדר לימוד א׳"><p class="field-help">לשולחנות באותו חדר משתמשים באותו שם חדר בדיוק.</p><label for="resource-kind">סוג</label><select id="resource-kind" name="kind"><option value="desk">שולחן</option><option value="room">חדר שלם</option></select><p id="resource-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">הוספת מקום</button><button class="button subtle" type="button" data-close="resource-dialog">חזרה</button></div></form>
+  </dialog>
+
+  <dialog id="closure-dialog" aria-labelledby="closure-title">
+    <div class="dialog-heading"><h2 id="closure-title">סגירת משמרת</h2><button class="icon-button" type="button" data-close="closure-dialog" aria-label="סגירה">×</button></div>
+    <form id="closure-form"><label for="closure-date">תאריך</label><input id="closure-date" name="date" type="date" required><div class="form-columns"><div><label for="closure-period">זמן</label><select id="closure-period" name="period"><option value="full">כל היום</option><option value="morning">בוקר</option><option value="afternoon">אחר הצהריים</option></select></div><div><label for="closure-location">מקום השתתפות</label><select id="closure-location" name="location"><option value="all">הכול</option><option value="center">במרכז</option><option value="home">מהבית</option></select></div></div><label for="closure-reason">סיבה / הודעה למשתתפים</label><input id="closure-reason" name="reason" required maxlength="300" dir="auto" placeholder="למשל, המרכז סגור היום"><p class="info-note">הרשמות קיימות יוצגו כמבוטלות כל עוד הסגירה בתוקף.</p><p id="closure-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">סגירת המשמרת</button><button class="button subtle" type="button" data-close="closure-dialog">חזרה</button></div></form>
+  </dialog>
+
+  <dialog id="announcement-dialog" aria-labelledby="announcement-title">
+    <div class="dialog-heading"><h2 id="announcement-title">הודעה חדשה</h2><button class="icon-button" type="button" data-close="announcement-dialog" aria-label="סגירה">×</button></div>
+    <form id="announcement-form"><div class="form-columns"><div><label for="announcement-date">מתאריך</label><input id="announcement-date" name="date" type="date" required></div><div><label for="announcement-end">עד תאריך</label><input id="announcement-end" name="end_date" type="date" required></div></div><label for="announcement-heading">כותרת</label><input id="announcement-heading" name="title" required maxlength="120" dir="auto"><label for="announcement-body">הודעה</label><textarea id="announcement-body" name="body" required maxlength="1000" rows="4" dir="auto"></textarea><p id="announcement-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button primary" type="submit">פרסום הודעה</button><button class="button subtle" type="button" data-close="announcement-dialog">חזרה</button></div></form>
+  </dialog>
+</body>
+</html>
