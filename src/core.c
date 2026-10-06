@@ -231,7 +231,7 @@ int bootstrap(App *a) {
         return 0;
     }
     const char *logins[] = {"oleg2", "oleg1", "shira", "reut"};
-    const char *names[] = {"אולג 2", "אולג 1", "שירה", "רעות"};
+    const char *names[] = {"אולג 2", "אולג 1", "שירה", "ראות"};
     json_object *out = json_object_new_object(), *accounts = json_object_new_array();
     json_object_object_add(out, "accounts", accounts);
     for (int i = 0; i < 4; i++) {
